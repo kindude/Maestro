@@ -11,28 +11,76 @@ class MaestroRole(models.Model):
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='student')
 
+    def __str__(self):
+        return self.get_role_display()
 
 def get_default_role():
-    return MaestroRole.objects.get_or_create(role="student")[0].id
+    # Return the default MaestroRole instance (ensure one exists)
+    return MaestroRole.objects.get_or_create(role='student')[0].pk
+class MaestroInstrument(models.Model):
+    INSTRUMENT_CHOICES = (
+        ('violin', 'Violin'),
+        ('guitar', 'Guitar'),
+        ('piano', 'Piano'),
+        ('drums', 'Drums')
+    )
+    instrument = models.CharField(max_length=10, choices=INSTRUMENT_CHOICES)
+
+    def __str__(self):
+        return self.get_instrument_display()
+
+
+class MaestroClass(models.Model):
+    title = models.CharField(max_length=200)
+    duration = models.IntegerField() # duration in weeks
+
+    def __str__(self):
+        return self.title
+
+
+class MaestroLesson(models.Model):
+    title = models.CharField(max_length=200)
+    duration = models.IntegerField(default=60) # duration in minutes
+    is_group = models.BooleanField(default=False)
+    price = models.DecimalField(decimal_places=3, max_digits=7)
+    dt = models.DateTimeField()
+    associated_class = models.ForeignKey(
+        MaestroClass,
+        on_delete=models.CASCADE,
+        related_name="lessons"
+    )
+
+    def __str__(self):
+        return self.title
+
+
+class MaestroAssignment(models.Model):
+    title = models.CharField(max_length=200)
+    text = models.TextField(max_length=1000)
+    date_due = models.DateTimeField()
+    lesson = models.ForeignKey(
+        MaestroLesson,
+        on_delete=models.CASCADE,
+        related_name="assignments"
+    )
 
 
 class MaestroUser(AbstractUser):
-    role = models.OneToOneField(MaestroRole, on_delete=models.SET_DEFAULT, default=get_default_role,
-                                related_name='user')
-    groups = models.ManyToManyField(
-        Group,
-        related_name="maestro_users_groups",
-        blank=True
+    role = models.ForeignKey(
+        MaestroRole,
+        on_delete=models.SET_DEFAULT,
+        default=None,
+        null=True,
+        related_name='users'
     )
-
-    user_permissions = models.ManyToManyField(
-        Permission,
-        related_name="maestro_users_permissions",
-        blank=True
-    )
-    password_hash = models.CharField(max_length=256)
-    balance = models.DecimalField(decimal_places=3, max_digits=7)
+    balance = models.DecimalField(decimal_places=3, max_digits=7, default=0)
+    instruments = models.ManyToManyField(MaestroInstrument, related_name="users", blank=True)
+    classes = models.ManyToManyField(MaestroClass, related_name="users", blank=True)
+    assignments = models.ManyToManyField(MaestroAssignment, related_name="users", blank=True)
 
     def __str__(self):
-        return self.first_name + self.last_name
+        full_name = f"{self.first_name} {self.last_name}".strip()
+        return full_name if full_name else self.username
+
+
 
