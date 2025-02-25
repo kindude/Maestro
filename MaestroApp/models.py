@@ -1,5 +1,5 @@
 from django.db import models
-
+from typing import Optional
 from django.contrib.auth.models import AbstractUser, Permission, Group
 
 
@@ -65,7 +65,20 @@ class MaestroAssignment(models.Model):
     )
 
 
-class MaestroUser(AbstractUser):
+class RoleMixin:
+    role: Optional[MaestroRole]
+
+    def is_admin(self):
+        return self.role and self.role.role == 'admin'
+
+    def is_teacher(self):
+        return self.role and self.role.role == 'teacher'
+
+    def is_student(self):
+        return self.role and self.role.role == 'student'
+
+
+class MaestroUser(AbstractUser, RoleMixin):
     role = models.ForeignKey(
         MaestroRole,
         on_delete=models.SET_DEFAULT,
