@@ -15,8 +15,9 @@ class MaestroRole(models.Model):
         return self.get_role_display()
 
 def get_default_role():
-    # Return the default MaestroRole instance (ensure one exists)
-    return MaestroRole.objects.get_or_create(role='student')[0].pk
+    return MaestroRole.objects.get_or_create(role='student')
+
+
 class MaestroInstrument(models.Model):
     INSTRUMENT_CHOICES = (
         ('violin', 'Violin'),

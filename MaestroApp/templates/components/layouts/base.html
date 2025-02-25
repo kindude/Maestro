@@ -4,45 +4,22 @@
     {% load static %}
     {% load django_bootstrap5 %}
     <meta charset="UTF-8">
-    <title>{% block title %} {% endblock %}</title>
-    {% block extra_scripts %}
-    {% endblock %}
+    <title>{% block title %}My Site{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
-    {% block extra_css %}
-    {% endblock %}
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
+    <div class="wrapper">
+        {% include "components/components/navbar.html" %}
 
-    <nav class="navbar navbar-expand-sm bg-light">
+        <div class="container mt-5 content">
+            {% block content %}{% endblock %}
+        </div>
 
-      <div class="container-fluid">
-        <!-- Links -->
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="play">Play Yourself</a>
-          </li>
-        </ul>
-      </div>
-
-    </nav>
-
-    <div class="container mt-5 content">
-        {% block content %} {% endblock %}
+        <!-- Sticky Footer -->
+        {% include "components/components/footer.html" %}
     </div>
-
-    <footer class="footer mt-auto py-3 bg-light">
-      <div class="container">
-        <span class="text-muted">Place sticky footer content here.</span>
-      </div>
-    </footer>
-
 </body>
 </html>
