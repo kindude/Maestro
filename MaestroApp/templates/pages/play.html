@@ -1,11 +1,11 @@
 {% extends 'components/layouts/base.html' %}
 {% load static %}
 {% block extra_scripts %}
+<script src="{% static 'js/synth.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/15.1.3/Tone.js"
         integrity="sha512-l/S587UA2X7JyCkDqZiEX+4OC6Hp8FC0PE1MFi3+KFLk3n1lxQAtSq8YTZ4ig2YFpJal2Jhz3H3iIFyv3KScFA=="
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-<script src="{% static 'js/synth.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -16,14 +16,14 @@
 
 <!-- Keyboard Container -->
 <div class="keyboard">
-    <div class="key" data-note="C4" data-key="q">Q</div>
-    <div class="key" data-note="C2" data-key="w">W</div>
+    <div class="key" data-note="A1" data-key="q">Q</div>
+    <div class="key" data-note="B1" data-key="w">W</div>
     <div class="key" data-note="C1" data-key="e">E</div>
-    <div class="key" data-note="F4" data-key="r">R</div>
-    <div class="key" data-note="G2" data-key="t">T</div>
-    <div class="key" data-note="A4" data-key="y">Y</div>
-    <div class="key" data-note="B4" data-key="u">U</div>
-    <div class="key" data-note="C5" data-key="i">I</div>
+    <div class="key" data-note="D1" data-key="r">R</div>
+    <div class="key" data-note="E1" data-key="t">T</div>
+    <div class="key" data-note="F1" data-key="y">Y</div>
+    <div class="key" data-note="G1" data-key="u">U</div>
+    <div class="key" data-note="G2" data-key="i">I</div>
 </div>
 
 {% endblock %}
