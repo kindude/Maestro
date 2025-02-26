@@ -7,12 +7,18 @@
     <style>
         body {
             background-color: #20451f;
-            font-family: Arial, sans-serif;
+            font-family: Tahoma, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            background-image: url('2436385232.png');
+            background-size: 60%;
+            background-position-x: left;
+            background-repeat: no-repeat;
+            
+            
         }
         .container {
             display: flex;
@@ -20,15 +26,17 @@
             justify-content: space-between;
             width:800px;
             padding: 20px;
-            background-color: #20451f;
             border-radius: 8px;
+           
         }
+        
         .logo {
             background-color: #6f8b6b;
+            font-family: Georgia, serif;
             color: white;
             width: 200px;  
             height: 200px; 
-            line-height: 200px; 
+            line-height: 500px; 
             font-size: 20px; 
             font-weight: bold;
             border-radius: 50%; 
@@ -54,7 +62,6 @@
             z-index: 1; 
         }
         
-        
         .form-container {
             display: flex;
             flex: 1;
@@ -64,7 +71,6 @@
             align-items: flex-start;
             margin-left: 240px
         }
-        
         
         .tabs {
             display: flex;
@@ -123,46 +129,48 @@
             cursor: pointer;
             width: 50%;
             display:block;
-            margin:10px auto
+            margin:10px auto;
             font-size: 16px;
             margin-top: 10px;
             margin-left: 70%;
             margin-right: 0;
         }
+        
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <img src="/Users/yasaman/music_school/accounts/templates/accounts/musical-note-145074_640.webp" alt="Music Logo">
-            <span>Maestro.</span>
-        </div>
-        <div class="form-container">
-            <div class="tabs">
-                <a href="login.html" class="tab">Sign in</a> 
-                <a href="register.html" class="tab active">Sign up</a>
+   
+        <div class="container">
+            <div class="logo">
+                <span>Maestro.</span>
             </div>
-            <form method="POST" action="register.html">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
+            <div class="form-container">
+                <div class="tabs">
+                    <a href="login.html" class="tab">Sign in</a> 
+                    <a href="register.html" class="tab active">Sign up</a>
                 </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password:</label>
-                    <input type="password" id="confirm-password" name="confirm-password" required>
-                </div>
-                <button type="submit" class="enter-btn">Sign Up</button> 
-            </form>
+                <form method="POST" action="register.html">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password:</label>
+                        <input type="password" id="confirm-password" name="confirm-password" required>
+                    </div>
+                    <button type="submit" class="enter-btn">Sign Up</button> 
+                </form>
+            </div>
         </div>
-    </div>
+   
 </body>
 </html>
