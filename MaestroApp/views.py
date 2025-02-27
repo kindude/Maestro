@@ -15,3 +15,7 @@ def about(request):
 
 def play(request):
     return render(request, 'pages/play.html')
+
+
+def dashboard(request):
+    return render(request, 'pages/dashboard.html')

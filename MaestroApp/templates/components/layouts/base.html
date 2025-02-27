@@ -1,26 +1,40 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
-    {% load static %}
-    {% load django_bootstrap5 %}
     <meta charset="UTF-8">
-    <title>{% block title %}My Site{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="{% static 'css/base.css' %}" rel="stylesheet">
-    {% block extra_css %}{% endblock %}
-    {% block extra_scripts %}{% endblock %}
-</head>
-<body>
-    <div class="wrapper">
-        {% include "components/components/navbar.html" %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maestro - {% block title_block %}
+        {% endblock %}
+    </title>
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/base.css'%}"/>
+    {% block extra_scripts %} {% endblock %}
 
-        <div class="container mt-5 content">
-            {% block content %}{% endblock %}
+
+</head>
+
+<body>
+    <div class="d-flex">
+        <!-- make sidebar -->
+        {% include 'components/components/sidebar.html' %}
+        <!-- end of sidebar -->
+
+        <!-- nav bar -->
+        <div class="main">
+            {% include 'components/components/navbar.html' %}
+            <main class="p-3">
+                {% block content %} {% endblock %}
+                {% block extra_css %} {% endblock %}
+            </main>
         </div>
 
-        <!-- Sticky Footer -->
-        {% include "components/components/footer.html" %}
     </div>
-</body>
+
+    <script src="{% static 'js/base.js' %}"></script>
+    </body>
+
 </html>

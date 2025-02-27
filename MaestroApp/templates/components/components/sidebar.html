@@ -1,0 +1,73 @@
+<aside id="sidebar" class="sidebar-toggle">
+    <div class="sidebar-logo">
+        <a href="{% url 'home' %}">MAESTRO.</a>
+    </div>
+    <!-- sidebar nav -->
+    <ul class="sidebar-nav p-0">
+        <li class="sidebar-header">
+        </li>
+        <li class="sidebar-item">
+            {% if user.is_authenticated %}
+            <a href= "{% url 'home' %}" class="sidebar-link">
+                <i class="lni lni-user"></i>
+
+                <span>User</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a href="{% url 'home' %}" class="sidebar-link">
+                <i class="lni lni-agenda"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="{% url 'about' %}" class="sidebar-link">
+                <i class="lni lni-agenda"></i>
+                <span>About</span>
+            </a>
+        </li>
+        <li class="sidebar-header">
+            Pages
+        </li>
+        <li class="sidebar-item">
+            <a href="{% url 'home' %}" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                data-bs-target="#auth" aria-expanded="true" aria-controls="auth">
+                <i class="lni lni-protection"></i>
+                <span>Auth</span>
+            </a>
+            <li class="sidebar-item">
+                <a href="{% url 'home' %}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+        </li>
+            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+
+
+§                    {% else %}
+            <li>
+                <li class="sidebar-item">
+                    <a href="{% url 'home' %}" class="sidebar-link">About</a>
+                </li>
+                <li class="sidebar-item">
+
+                    <a href="{% url 'login' %}" class="sidebar-link">Login</a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="{% url 'register' %}" class="sidebar-link">Register</a>
+                </li>
+            </ul>
+            </li>
+            {% endif %}
+    </ul>
+    <!-- end of sidebar nav -->
+
+    {% if user.is_authenticated %}
+    <div class="sidebar-footer">
+        <a href="#" class="sidebar-link">
+            <i class="lni lni-exit"></i>
+            <span>Log out</span>
+        </a>
+    </div>
+    {% endif %}
+</aside>
