@@ -2,10 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
-
+from .models import MaestroClass
 # Existing views
 def index(request):
-    return render(request, 'pages/home.html')
+    classes = MaestroClass.objects.all()
+    context = {'classes': classes}
+
+    return render(request, 'pages/home.html', context)
 
 def about(request):
     return render(request, 'pages/about.html')
