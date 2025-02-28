@@ -1,0 +1,10 @@
+<nav class="navbar navbar-expand">
+    <button class="toggler-btn" type="button">
+        <i class="lni lni-text-align-left"></i>
+    </button>
+    <div class="container-fluid">
+        <div class="navbar-logo">
+           {% block currentpage_block %} <a href="{% url 'home' %}">MAESTRO.</a> {% endblock %}
+        </div>
+    </div>
+</nav>
