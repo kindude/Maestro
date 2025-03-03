@@ -6,6 +6,7 @@
     <title>Login</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/removeErrors.js' %}"></script>
 </head>
 <body>
     <div class="container">
@@ -17,21 +18,34 @@
                 <a href="{% url 'login' %}" class="tab active">Sign in</a> 
                 <a href="{% url 'register' %}" class="tab">Sign up</a>
             </div>
-            <form method="POST" action="{% url 'login' %}">
+            <form method="POST">
                 {% csrf_token %}
-            
-                <div class="form-group">
-                    <label for="id_username">Username:</label>
-                    <input type="text" name="username" id="id_username">
-                </div>
-            
-                <div class="form-group">
-                    <label for="id_password">Password:</label>
-                    <input type="password" name="password" id="id_password">
-                    <a href="#" class="forgot-password">Forgot password?</a> <!-- ✅ Keep only this one -->
-                </div>
-            
-                <button type="submit" class="enter-btn">Enter</button>
+
+                {% if form.non_field_errors %}
+                    <div class="non-field-errors" style="color: red; font-weight: bold;">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+
+                        {% if field.errors %}
+                            <ul class="errorlist" style="color: red; padding-left: 0;">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="enter-btn">Sign in</button>
             </form>
         </div>
     </div>
