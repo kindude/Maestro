@@ -1,0 +1,78 @@
+{% extends 'components/layouts/base.html' %}
+{%  load static %}
+
+{% block title %} Find Classes {% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/classStyle.css'%}"/>
+
+{% include 'components/components/searchbar.html' %} 
+
+<div class = "form container">
+    <form method = "POST">
+        {% csrf_token %}
+
+        {% if classes %}
+        <title>
+           <h1>
+            All Classes
+           </h1>
+        </title>
+         {% for some in classes %}
+            <title> {{ some.title }} Report</title>
+        
+            <h3>{{ some.title}}</h3>
+        
+            <table style="width:40%">
+        
+                <td> 
+                    Duration:
+                
+                    {% if some.duration %}
+                    {{some.duration}} 
+                    {% else %}
+                    data unavailable
+                    {% endif %}
+                </td>
+                <td>
+                    Instrument: {{some.instrument}}
+
+                </td>
+                <td>
+                    Teacher: {{some.teacher}}
+                </td>
+                <td>
+                    Capacity: {{some.capacity}}
+                </td>
+                <td>
+                    Availability: 
+                    {% if some.availability%}
+                        Available
+                    {% else %}
+                        Not Available
+                    {% endif %}
+                </td>
+                <td>
+                    Group?
+                    {% if some.is_group %}
+                        group class
+                    {% else %}
+                        solo class
+                    {% endif %}
+                </td>
+                <td>
+                    Price:
+                    {{some.price}}
+                </td>
+                    
+
+                </table>
+        
+        {% endfor %}
+   
+        {% else %}
+        {% endif %}
+</div>
+
+
+
+{% endblock %}

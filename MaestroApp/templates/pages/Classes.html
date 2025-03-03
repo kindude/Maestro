@@ -1,0 +1,40 @@
+{% extends 'components/layouts/base.html' %}
+{%  load static %}
+
+{% block title %} Classes {% endblock %}
+{% block content %}
+
+
+<div class = "form container">
+    <form method = "POST">
+        {% csrf_token %}
+
+        {% if classes %}
+         {% for some in classes %}
+            <title> {{ some.title }} Report</title>
+        
+            <h3>{{ some.title}}</h3>
+        
+            <table style="width:30%">
+        
+                <td> duration {{some.duration}} </td>
+              
+        
+                </table>
+        
+        {% endfor %}
+        
+        <h2>No User</h2>
+        {% else %}
+        {% endif %}
+
+        <form method="post" action='/createClassForm/'>
+            {% csrf_token %}
+            {{form}}
+            <button type='submit'>Done</button>
+        </form>
+</div>
+
+
+
+{% endblock %}
