@@ -1,7 +1,8 @@
 
 from django.urls import path
 
-from MaestroApp.views import index, about, play, dashboard, logout_view, login_view, register_view
+from MaestroApp.views import index, about, play, dashboard
+from MaestroApp.auth_views import *
 
 
 urlpatterns = [
