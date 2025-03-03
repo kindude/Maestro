@@ -89,13 +89,14 @@ label {
 }
 
 input {
-    width: 100%; /* Ensures uniform width */
-    max-width: 250px; /* Prevents oversized inputs */
-    height: 40px; /* Sets a fixed height */
-    padding: 8px; /* Provides consistent padding */
-    border: 1px solid #ccc; /* Adds a light border */
-    border-radius: 5px; /* Keeps styling consistent */
-    font-size: 14px; /* Ensures text size is the same */
+    width: 110%; 
+    max-width: 250px; 
+    height: 20px; 
+    padding: 8px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    font-size: 14px; 
+    margin-left: 25px;
 }
 
 .enter-btn {
@@ -110,7 +111,7 @@ input {
     margin: 10px auto;
     font-size: 16px;
     margin-top: 50px;
-    margin-left: 70%;
+    margin-left: 50%;
     margin-right: 0;
 }
 
@@ -121,6 +122,6 @@ input {
     display: block;
     margin-top: 5px;
     text-decoration: none;
-    margin-left: 0px;
+    margin-left: 20px;
     width: fit-content;
 }
