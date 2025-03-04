@@ -34,6 +34,13 @@ class MaestroInstrument(models.Model):
 class MaestroClass(models.Model):
     title = models.CharField(max_length=200)
     duration = models.IntegerField() # duration in weeks
+    capacity = models.IntegerField(default=20)
+    instrument = models.ForeignKey(
+        MaestroInstrument,
+        on_delete=models.CASCADE,
+        related_name="classes",
+        default=1
+    )
     
     def __str__(self):
         return self.title
