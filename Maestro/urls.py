@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from MaestroApp import urls as app_urls  
+from MaestroApp import urls as app_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(app_urls)),  
+    path('', include(app_urls)),
+    path('accounts/', include('allauth.urls')),
 ]

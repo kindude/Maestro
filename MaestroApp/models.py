@@ -34,10 +34,28 @@ class MaestroInstrument(models.Model):
 class MaestroClass(models.Model):
     title = models.CharField(max_length=200)
     duration = models.IntegerField() # duration in weeks
-
+    capacity = models.IntegerField(default=20)
+    instrument = models.ForeignKey(
+        MaestroInstrument,
+        on_delete=models.CASCADE,
+        related_name="classes",
+        default=1
+    )
+    available = models.BooleanField(default=True)
+    
     def __str__(self):
         return self.title
 
+class testClass(models.Model):
+    title = models.CharField(max_length = 200)
+    instrument= models.CharField(max_length = 200)
+    teacher= models.CharField(max_length = 200)
+    price= models.IntegerField()
+    is_group= models.BooleanField(default = False)
+    capacity= models.IntegerField(default = 20)
+    availability=models.BooleanField(default = True)
+    def __str__(self):
+        return self.title
 
 class MaestroLesson(models.Model):
     title = models.CharField(max_length=200)

@@ -1,3 +1,5 @@
+{% load user_tags %}
+
 <aside id="sidebar" class="sidebar-toggle">
     <div class="sidebar-logo">
         <a href="{% url 'home' %}">MAESTRO.</a>
@@ -8,31 +10,26 @@
         </li>
         <li class="sidebar-item">
             {% if user.is_authenticated %}
-            <a href= "{% url 'home' %}" class="sidebar-link">
+            <a href= "{% url 'dashboard' %}" class="sidebar-link">
                 <i class="lni lni-user"></i>
 
                 <span>User</span>
             </a>
         </li>
+
         <li class="sidebar-item">
-            <a href="{% url 'home' %}" class="sidebar-link">
+        {%  if user|is_student %}
+            <a href="{% url 'find_classes' %}" class="sidebar-link">
                 <i class="lni lni-agenda"></i>
-                <span>Tasks</span>
+                <span>Find classes</span>
             </a>
+            {% endif %}
             <a href="{% url 'about' %}" class="sidebar-link">
                 <i class="lni lni-agenda"></i>
                 <span>About</span>
             </a>
         </li>
-        <li class="sidebar-header">
-            Pages
-        </li>
         <li class="sidebar-item">
-            <a href="{% url 'home' %}" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-                data-bs-target="#auth" aria-expanded="true" aria-controls="auth">
-                <i class="lni lni-protection"></i>
-                <span>Auth</span>
-            </a>
             <li class="sidebar-item">
                 <a href="{% url 'home' %}" class="sidebar-link">
                     <i class="lni lni-popup"></i>
@@ -43,7 +40,7 @@
             <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 
 
-§                    {% else %}
+        {% else %}
             <li>
                 <li class="sidebar-item">
                     <a href="{% url 'home' %}" class="sidebar-link">About</a>
@@ -63,8 +60,9 @@
     <!-- end of sidebar nav -->
 
     {% if user.is_authenticated %}
+
     <div class="sidebar-footer">
-        <a href="#" class="sidebar-link">
+        <a href="{% url 'logout' %}" class="sidebar-link">
             <i class="lni lni-exit"></i>
             <span>Log out</span>
         </a>

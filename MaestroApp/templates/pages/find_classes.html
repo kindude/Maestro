@@ -1,0 +1,83 @@
+{% extends 'components/layouts/base.html' %}
+{%  load static %}
+
+{% block title %} Find Classes {% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/classStyle.css'%}"/>
+
+{% include 'components/components/searchbar.html' %} 
+
+<div class="form container">
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if classes %}
+        <title>
+           <h1>
+            All Classes
+           </h1>
+        </title>
+         {% for class in classes %}
+            <title> {{ class.title }} Report</title>
+        
+            <h3>{{ class.title}}</h3>
+        
+            <table style="width:40%">
+        
+                <td> 
+                    Duration:
+                
+                    {% if class.duration %}
+                    {{class.duration}}
+                    {% else %}
+                    data unavailable
+                    {% endif %}
+                </td>
+                <td>
+                    Instrument: {{class.instrument}}
+
+                </td>
+                <td>
+                    Teacher(s):
+                    {% for teacher in class.users.all %}
+                        {{ teacher.username }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        No assigned teachers
+                    {% endfor %}
+                </td>
+                <td>
+                    Capacity: {{class.capacity}}
+                </td>
+                <td>
+                    Availability: 
+                    {% if class.available%}
+                        Available
+                    {% else %}
+                        Not Available
+                    {% endif %}
+                </td>
+                <td>
+                    Group?
+                    {% if some.is_group %}
+                        group class
+                    {% else %}
+                        solo class
+                    {% endif %}
+                </td>
+                <td>
+                    Price:
+                    {{some.price}}
+                </td>
+                    
+
+                </table>
+        
+        {% endfor %}
+   
+        {% else %}
+        {% endif %}
+</div>
+
+
+
+{% endblock %}
