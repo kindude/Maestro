@@ -3,7 +3,6 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
     height: 100vh;
     margin: 0;
 }
@@ -11,10 +10,9 @@ body {
 .container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: left;
     width: 800px;
     padding: 20px;
-    background-color:#20451f;
     border-radius: 8px;
 }
 
@@ -46,7 +44,7 @@ body {
     text-align: left;
     flex-direction: column;
     align-items: flex-start;
-    margin-left: 240px;
+    margin-left: 250px;
 }
 
 .tabs {
@@ -77,6 +75,8 @@ body {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
+    padding-right: 50 px;
+    margin-left: 10px;
 }
 
 label {
@@ -89,13 +89,15 @@ label {
 }
 
 input {
-    width: 100%; /* Ensures uniform width */
-    max-width: 250px; /* Prevents oversized inputs */
-    height: 40px; /* Sets a fixed height */
-    padding: 8px; /* Provides consistent padding */
-    border: 1px solid #ccc; /* Adds a light border */
-    border-radius: 5px; /* Keeps styling consistent */
-    font-size: 14px; /* Ensures text size is the same */
+    width: 105%; 
+    max-width: 250px; 
+    height: 20px; 
+    padding: 8px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    font-size: 14px; 
+    text-align: right;
+    margin-left: 20px;
 }
 
 .enter-btn {
@@ -110,7 +112,7 @@ input {
     margin: 10px auto;
     font-size: 16px;
     margin-top: 50px;
-    margin-left: 70%;
+    margin-left: 45%;
     margin-right: 0;
 }
 
@@ -121,6 +123,16 @@ input {
     display: block;
     margin-top: 5px;
     text-decoration: none;
-    margin-left: 0px;
+    margin-left: 20px;
     width: fit-content;
+}
+
+.user-card {
+    background-color: white !important;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-left: -200px;
+    max-width: 400px;
+    
 }

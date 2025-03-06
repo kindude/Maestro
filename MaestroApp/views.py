@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 
@@ -52,3 +52,10 @@ def login_view(request):
 # Test view (optional, can be removed)
 def test_view(request):
     return render(request, 'pages/login.html')
+
+def test_dashboard(request):
+    return render(request, 'pages/dashboard.html')
+
+def logout_view(request):
+    logout(request)  # Logs out the user
+    return redirect('login')  # Redirects to the login page
