@@ -41,6 +41,7 @@ class MaestroClass(models.Model):
         related_name="classes",
         default=1
     )
+    available = models.BooleanField(default=True)
     
     def __str__(self):
         return self.title

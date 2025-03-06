@@ -7,8 +7,8 @@
 
 {% include 'components/components/searchbar.html' %} 
 
-<div class = "form container">
-    <form method = "POST">
+<div class="form container">
+    <form method="POST">
         {% csrf_token %}
 
         {% if classes %}
@@ -17,35 +17,40 @@
             All Classes
            </h1>
         </title>
-         {% for some in classes %}
-            <title> {{ some.title }} Report</title>
+         {% for class in classes %}
+            <title> {{ class.title }} Report</title>
         
-            <h3>{{ some.title}}</h3>
+            <h3>{{ class.title}}</h3>
         
             <table style="width:40%">
         
                 <td> 
                     Duration:
                 
-                    {% if some.duration %}
-                    {{some.duration}} 
+                    {% if class.duration %}
+                    {{class.duration}}
                     {% else %}
                     data unavailable
                     {% endif %}
                 </td>
                 <td>
-                    Instrument: {{some.instrument}}
+                    Instrument: {{class.instrument}}
 
                 </td>
                 <td>
-                    Teacher: {{some.teacher}}
+                    Teacher(s):
+                    {% for teacher in class.users.all %}
+                        {{ teacher.username }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        No assigned teachers
+                    {% endfor %}
                 </td>
                 <td>
-                    Capacity: {{some.capacity}}
+                    Capacity: {{class.capacity}}
                 </td>
                 <td>
                     Availability: 
-                    {% if some.availability%}
+                    {% if class.available%}
                         Available
                     {% else %}
                         Not Available

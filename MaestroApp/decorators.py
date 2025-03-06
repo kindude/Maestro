@@ -2,21 +2,21 @@ from django.contrib.auth.decorators import user_passes_test
 
 
 def is_admin(user):
-    return user.groups.filter(name="Admin").exists()
+    if not user.is_authenticated:
+        return False
+    return user.groups.filter(name__iexact='admin').exists()
 
 
 def is_teacher(user):
-    return user.groups.filter(name="Teacher").exitsts()
+    if not user.is_authenticated:
+        return False
+    return user.groups.filter(name__iexact='teacher').exists()
 
 
 def is_student(user):
     if not user.is_authenticated:
-        return False  # User must be logged in
-
-    user.refresh_from_db()  # Force refresh from database
-    print("User Groups after refresh:", user.groups.values_list("name", flat=True))  # Debugging
-
-    return user.groups.filter(name="Student").exists()
+        return False
+    return user.groups.filter(name__iexact='student').exists()
 
 
 
