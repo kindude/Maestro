@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 
 from .decorators import student_required, teacher_required, admin_required
@@ -12,9 +13,19 @@ def index(request):
     context = {'classes': classes_objects}
     return render(request, 'pages/home.html', context)
 
+@login_required
+def dashboard(request):
+    return render(request, 'pages/dashboard.html')
 
 def about(request):
     return render(request, 'pages/about.html')
+
+def about(request):
+    return render(request, 'pages/about.html')
+
+
+def play(request):
+    return render(request, 'pages/play.html')
 
 @admin_required
 def create_class(request):
@@ -38,3 +49,9 @@ def logout_view(request):
     logout(request)  # Logs out the user
     return redirect('login')  # Redirects to the login page
 
+
+def find_classes(request):
+    classes_objects = MaestroClass.objects.all()
+    context = {'classes': classes_objects}
+
+    return render(request, 'pages/find_classes.html', context)

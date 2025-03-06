@@ -1,8 +1,7 @@
 
 from django.urls import path
-from .views import index, about, play, dashboard, test_dashboard, login_view, register_view, logout_view
-
-
+from .views import index, about, play, test_dashboard, logout_view, dashboard,  create_class, find_classes
+from MaestroApp.auth_views import *
 
 
 urlpatterns = [
@@ -15,3 +14,6 @@ urlpatterns = [
 
     path('login/', login_view, name='login'),
     path('register/', register_view, name='register'),
+    path('create-class/', create_class, name='create_class'),
+    path('find-classes/', find_classes, name='find_classes')
+]
