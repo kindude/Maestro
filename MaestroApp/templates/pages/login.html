@@ -1,3 +1,4 @@
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,7 @@
     <script src="{% static 'js/removeErrors.js' %}"></script>
 </head>
 <body>
+
     <div class="container">
         <div class="logo">
             <span>Maestro.</span>
@@ -46,6 +48,12 @@
                 {% endfor %}
 
                 <button type="submit" class="enter-btn">Sign in</button>
+                <div class="google-login">
+                    <a href="{% provider_login_url 'google' %}" class="google-btn">
+                        <img src="{% static 'images/google-logo.png' %}" alt="Google Logo">
+                        Sign in with Google
+                    </a>
+                </div>
             </form>
         </div>
     </div>

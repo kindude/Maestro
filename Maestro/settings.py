@@ -168,6 +168,17 @@ AUTHENTICATION_BACKENDS = [
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['profile', 'email'],
+
         'AUTH_PARAMS': {'access_type': 'online'},
     }
 }
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+SOCIALACCOUNT_ADAPTER = 'MaestroApp.adapters.MySocialAccountAdapter'
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
+
