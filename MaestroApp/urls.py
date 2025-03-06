@@ -16,4 +16,5 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('create-class/', create_class, name='create_class'),
     path('find-classes/', find_classes, name='find_classes')
+
 ]
