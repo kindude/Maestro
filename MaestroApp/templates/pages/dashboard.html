@@ -1,7 +1,55 @@
-{% extends 'components/layouts/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css"> 
+    <link rel="stylesheet" href="/static/css/base.css">
 
-{% block content %}
 
-    <h1>Dashboard</h1>
+</head>
+<body>
 
-{% endblock %}
+    <div id="sidebar">
+        <div class="sidebar-logo">
+            <a href="#">MAESTRO.</a>
+        </div>
+        <ul class="sidebar-nav mt-3 pt-2">  
+            <li><a href="/about" class="sidebar-link">About</a></li>
+            <li><a href="/login" class="sidebar-link">Login</a></li>
+            <li><a href="/register" class="sidebar-link">Register</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <nav class="navbar d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <button id="sidebarToggle" class="toggler-btn">
+                    <i class="lni lni-text-align-left"></i>
+                </button>
+                <span class="navbar-brand ms-2 text-white">MAESTRO.</span> 
+            </div>
+            <a href="/logout" class="btn btn-outline-light">Logout</a>
+        </nav>
+
+        <div class="container mt-4">
+            <div class="card user-card">
+                <div class="card-body">
+                    <h4>User Details</h4>
+                    <p><strong>First Name:</strong> {{ first_name }}</p>
+                    <p><strong>Middle Name:</strong> {{ middle_name|default:"N/A" }}</p>
+                    <p><strong>Last Name:</strong> {{ last_name }}</p>
+                    <p><strong>Date of Birth:</strong> {{ date_of_birth|default:"N/A" }}</p>
+                    <p><strong>Email:</strong> {{ email }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/base.js"></script>
+
+</body>
+</html>
