@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
+
 from .decorators import student_required, teacher_required, admin_required
 from .models import MaestroClass, testClass, MaestroInstrument
 from django.contrib.auth.decorators import login_required
 from .forms import CreateModelClass
+
 
 
 def index(request):
@@ -25,21 +27,14 @@ def create_class(request):
     else:
         form = CreateModelClass()
 
-    return render(request, 'pages/create_class.html', {'form': form})
+# Test view (optional, can be removed)
+def test_view(request):
+    return render(request, 'pages/login.html')
 
-
-def find_classes(request):
-    classes_objects = MaestroClass.objects.all()
-    context = {'classes': classes_objects}
-
-    return render(request, 'pages/find_classes.html', context)
-
-
-@student_required
-def play(request):
-    return render(request, 'pages/play.html')
-
-
-@login_required
-def dashboard(request):
+def test_dashboard(request):
     return render(request, 'pages/dashboard.html')
+
+def logout_view(request):
+    logout(request)  # Logs out the user
+    return redirect('login')  # Redirects to the login page
+
