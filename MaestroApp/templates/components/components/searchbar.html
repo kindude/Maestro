@@ -1,11 +1,15 @@
-<form class = "d-flex" method = POST 
-    action = "{% url 'find_classes'%}">
-    {% csrf_token %}
+
+{% load user_tags %}
+<form class="d-flex" method="GET" action="{% url 'find_classes' %}">
     <input class="form-control me-2"
-    type = "search" placeholder=" 
-    Search Classes" aria-label="Search" name = "search">
-    <button class = "btn btn-outline-secondary"type="submit">Search</button><hr>
+           type="search"
+           placeholder="Search Classes"
+           aria-label="Search"
+           name="search"
+           value="{{ request.GET.search|default:'' }}">  <!-- Keeps search input -->
 
-    <button class = "btn btn-outline-secondary"type="submit">Create New</button>
-  </form>
-
+    <button class="btn btn-outline-secondary" type="submit">Search</button>
+    {% if user|is_admin %}
+    <a href="{% url 'create_class' %}" class="btn btn-outline-secondary">Create New</a>
+    {% endif %}
+</form>

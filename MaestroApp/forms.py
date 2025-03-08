@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from MaestroApp import models
-from .models import testClass, MaestroInstrument, MaestroUser, MaestroClass
+from .models import testClass, MaestroInstrument, MaestroUser, MaestroClass, MaestroLesson
 
 User = get_user_model()
 
@@ -57,10 +57,51 @@ class CreateModelClass(forms.ModelForm):
 
     class Meta:
         model = MaestroClass
-        fields = ['title', 'duration', 'capacity', 'instrument']
+        fields = ['title', 'duration', 'capacity', 'instrument', 'teacher', 'is_group', 'available']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'duration': forms.NumberInput(attrs={'class': 'form-control'}),
             'capacity': forms.NumberInput(attrs={'class': 'form-control'}),
             'instrument': forms.Select(attrs={'class': 'form-control'}),
+            'teacher': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'is_group': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'available': forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        }
+
+
+class UpdateUserForm(forms.ModelForm):
+    first_name = forms.CharField(required=False, max_length=150)
+    last_name = forms.CharField(required=False, max_length=150)
+    date_of_birth = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+
+    class Meta:
+        model = MaestroUser
+        fields = ['first_name', 'last_name', 'date_of_birth']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
+
+class CreateUpdateLessonForm(forms.ModelForm):
+    title = forms.CharField(required=False, max_length=200)
+    duration = forms.IntegerField()
+    is_group = forms.BooleanField()
+    price = forms.DecimalField(decimal_places=3, max_digits=7)
+    dt = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    associated_class = forms.ModelChoiceField(
+        queryset=MaestroClass.objects.all(),
+        empty_label="Select a Class",
+        required=True)
+
+    class Meta:
+        model = MaestroLesson
+        fields = ['title', 'duration', 'is_group', 'price', 'dt', 'associated_class']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'duration': forms.NumberInput(attrs={'class': 'form-control'}),
+            'is_group': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'dt': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'associated_class': forms.Select(attrs={'class': 'form-control'}),
         }
