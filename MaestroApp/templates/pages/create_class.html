@@ -17,5 +17,13 @@
         </a>
 
     </form>
+
+Lessons
+{% for lesson in maestro_class.lessons.all %}
+
+<p>{{ lesson }}</p>
+
+{% endfor %}
+
 </div>
 {% endblock %}

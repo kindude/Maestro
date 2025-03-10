@@ -74,7 +74,7 @@ def lesson_create_edit(request, class_id, lesson_id=None):
     else:
         form = CreateUpdateLessonForm(instance=maestro_lesson)
 
-    return render(request, "pages/create_edit_lesson.html", {"form": form, "maestro_class": maestro_lesson})
+    return render(request, "pages/create_edit_lesson.html", {"form": form, "maestro_lesson": maestro_lesson})
 
 # Test view (optional, can be removed)
 def test_view(request):
