@@ -21,4 +21,5 @@ from MaestroApp import urls as app_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(app_urls)),
+    path('accounts/', include('allauth.urls')),
 ]

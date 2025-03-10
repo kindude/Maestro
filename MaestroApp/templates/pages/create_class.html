@@ -1,0 +1,29 @@
+{% extends 'components/layouts/base.html' %}
+{% block title %} {% if maestro_class %} Edit Class {% else %} Create Class {% endif %} {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if maestro_class %} Edit Class {% else %} Create a New Class {% endif %}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">
+            {% if maestro_class %} Update Class {% else %} Create Class {% endif %}
+        </button>
+        <a href="{% url 'lesson_create' maestro_class.id %}">
+            Add Lesson
+        </a>
+
+    </form>
+
+Lessons
+{% for lesson in maestro_class.lessons.all %}
+
+<p>{{ lesson }}</p>
+
+{% endfor %}
+
+</div>
+{% endblock %}

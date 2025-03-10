@@ -1,0 +1,64 @@
+{% extends 'components/layouts/base.html' %}
+{% load static %}
+
+{% block title %} Find Classes {% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/classStyle.css'%}"/>
+
+{% include 'components/components/searchbar.html' %}
+
+<div class="container">
+    <h1>All Classes</h1>
+
+    {% if classes %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Duration (weeks)</th>
+                    <th>Instrument</th>
+                    <th>Teacher(s)</th>
+                    <th>Capacity</th>
+                    <th>Availability</th>
+                    <th>Group</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for class in classes %}
+                <tr>
+                    <td><a href="{% url 'class_edit' class.id %}" class="btn btn-warning">{{ class.title }}</a></td>
+                    <td>{{ class.duration|default:"Data Unavailable" }}</td>
+                    <td>{{ class.instrument }}</td>
+                    <td>
+                        {% for teacher in class.teachers.all %}
+                            {{ teacher.username }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            No assigned teachers
+                        {% endfor %}
+                    </td>
+                    <td>{{ class.capacity }}</td>
+                    <td>
+                        {% if class.available %}
+                            Available
+                        {% else %}
+                            Not Available
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if class.is_group %}
+                            Group Class
+                        {% else %}
+                            Solo Class
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No classes found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

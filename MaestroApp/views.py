@@ -1,86 +1,124 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
-from django.db.models import Sum
-from .models import MaestroRole, MaestroClass, MaestroAssignment
+from django.contrib.auth import logout
+from django.shortcuts import render, redirect, get_object_or_404
 
-User = get_user_model()
+from .decorators import student_required, teacher_required, admin_required, is_admin
+from .models import MaestroClass, testClass, MaestroInstrument, MaestroLesson
+from django.contrib.auth.decorators import login_required
+from .forms import CreateModelClass, UpdateUserForm, CreateUpdateLessonForm
+
 
 def index(request):
-    return render(request, 'pages/home.html', {"classes": MaestroClass.objects.all()})
+    classes_objects = MaestroClass.objects.all()
+    context = {'classes': classes_objects}
+    return render(request, 'pages/home.html', context)
+
+@login_required
+def dashboard(request):
+    return render(request, 'pages/dashboard.html')
 
 def about(request):
     return render(request, 'pages/about.html')
 
+def about(request):
+    return render(request, 'pages/about.html')
+
+
 def play(request):
     return render(request, 'pages/play.html')
 
+
 @login_required
-def dashboard_view(request):
+def class_edit(request, class_id=None):
+    if class_id:
+        maestro_class = get_object_or_404(MaestroClass, id=class_id)
+        if not (is_admin(request.user) or request.user in maestro_class.teachers.all()):
+            return redirect("find_classes")
+    else:
+        if not is_admin(request.user):
+            return redirect("find_classes")
+
+        maestro_class = None
+
+    if request.method == "POST":
+        form = CreateModelClass(request.POST, instance=maestro_class)
+        if form.is_valid():
+            maestro_class = form.save(commit=False)
+            maestro_class.save()
+            form.save_m2m()
+            maestro_class.teachers.set(form.cleaned_data["teacher"])
+            return redirect("find_classes")
+    else:
+        form = CreateModelClass(instance=maestro_class)
+
+    return render(request, "pages/create_class.html", {"form": form, "maestro_class": maestro_class})
+
+
+@login_required
+def lesson_create_edit(request, class_id, lesson_id=None):
+    if lesson_id:
+        maestro_lesson = get_object_or_404(MaestroLesson, id=lesson_id)
+        if not (is_admin(request.user) or request.user in maestro_lesson.associated_class.teachers.all()):
+            return redirect("find_classes")
+    else:
+        if not is_admin(request.user):
+            return redirect("find_classes")
+
+        maestro_lesson = None
+
+    if request.method == "POST":
+        form = CreateUpdateLessonForm(request.POST, instance=maestro_lesson)
+        if form.is_valid():
+            maestro_lesson = form.save(commit=False)
+            maestro_lesson.save()
+            return redirect("find_classes")
+    else:
+        form = CreateUpdateLessonForm(instance=maestro_lesson)
+
+    return render(request, "pages/create_edit_lesson.html", {"form": form, "maestro_lesson": maestro_lesson})
+
+# Test view (optional, can be removed)
+def test_view(request):
+    return render(request, 'pages/login.html')
+
+@login_required
+def test_dashboard(request):
+    user = request.user
+    context = request.user
+    return render(request, 'pages/dashboard.html')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+
+def find_classes(request):
+    search_query = request.GET.get("search", "").strip()
+
+    if search_query:
+        classes = MaestroClass.objects.filter(title__icontains=search_query)
+    else:
+        classes = MaestroClass.objects.all()
+
+    return render(request, "pages/find_classes.html", {"classes": classes, "search_query": search_query})
+
+
+@login_required
+def update_user_profile(request):
     user = request.user
 
-    context = {
-        "role": user.role.role if user.role else "guest",  # Get user role
-        "first_name": user.first_name,
-        "middle_name": getattr(user, "middle_name", ""),  # If middle name exists
-        "last_name": user.last_name,
-        "email": user.email,
-        "classes": user.classes.all() if user.is_teacher() or user.is_student() else [],
-        "students": User.objects.filter(classes__in=user.classes.all(), role__role='student').distinct() if user.is_teacher() else [],
-        "assignments": user.assignments.all() if user.is_student() else [],
-        "total_students": User.objects.filter(role__role='student').count() if user.is_admin() else None,
-        "total_teachers": User.objects.filter(role__role='teacher').count() if user.is_admin() else None,
-    }
-
-    return render(request, "dashboard/dashboard.html", context)
-
-def register_view(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = UpdateUserForm(request.POST, instance=user)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.role = MaestroRole.objects.get_or_create(role='student')[0]
-            user.save()
-            login(request, user)
-            return redirect('dashboard')
-        else:
-            messages.error(request, "Registration failed. Please check the form.")
+            form.save()
+            return redirect("dashboard")
+
     else:
-        form = UserCreationForm()
+        form = UpdateUserForm(instance=user)
 
-    return render(request, 'pages/register.html', {'form': form})
-
-def login_view(request):
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
-            if user:
-                login(request, user)
-                return redirect('dashboard')
-            messages.error(request, "Invalid username or password.")
-        else:
-            messages.error(request, "Invalid username or password.")
-    else:
-        form = AuthenticationForm()
-
-    return render(request, 'pages/login.html', {'form': form})
+    return render(request, "pages/update_profile.html", {"form": form})
 
 
-def test_dashboard(request):
-    fake_user = {
-        "role": "teacher",  # Change to "admin", "student", or "teacher" to test different views
-        "first_name": "John",
-        "middle_name": "Michael",
-        "last_name": "Doe",
-        "email": "john.doe@example.com",
-        "classes": ["Class A", "Class B", "Class C"],  # Only for teachers and students
-        "assignments": ["Assignment 1", "Assignment 2"],  # Only for students
-        "students": ["Student X", "Student Y", "Student Z"],  # Only for teachers
-        "total_students": 50,  # Only for admins
-        "total_teachers": 10,  # Only for admins
-    }
-    return render(request, "pages/dashboard.html", fake_user)  # Updated path
+@login_required
+def notifications(request):
+    return render(request, 'pages/notifications.html')

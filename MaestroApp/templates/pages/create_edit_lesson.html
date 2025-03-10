@@ -1,0 +1,17 @@
+{% extends 'components/layouts/base.html' %}
+{% block title %} {% if maestro_lesson %} Edit Lesson {% else %} Create Lesson {% endif %} {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if maestro_lesson %} Edit Lesson {% else %} Create a new Lesson {% endif %}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">
+            {% if maestro_lesson %} Update Lesson {% else %} Create Lesson {% endif %}
+        </button>
+    </form>
+</div>
+{% endblock %}
