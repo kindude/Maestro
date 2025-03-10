@@ -29,7 +29,7 @@
 
     Assignments due
     {% for assignment in user.assignments.all %}
-        Assignment <p>{{ assignment }}</p>
+        Assignment <p>{{ assignment.date_due }}</p>
         Related Lesson <p>{{ assignment.lesson }}</p>
         Related Class<p>{{ assignment.lesson.associated_class }}</p>
     {% endfor %}

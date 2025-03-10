@@ -12,12 +12,15 @@ def index(request):
     context = {'classes': classes_objects}
     return render(request, 'pages/home.html', context)
 
+
 @login_required
 def dashboard(request):
     return render(request, 'pages/dashboard.html')
 
+
 def about(request):
     return render(request, 'pages/about.html')
+
 
 def about(request):
     return render(request, 'pages/about.html')
