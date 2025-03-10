@@ -2,7 +2,7 @@ from django.contrib.auth import logout
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .decorators import student_required, teacher_required, admin_required, is_admin
-from .models import MaestroClass, testClass, MaestroInstrument, MaestroLesson
+from .models import MaestroClass, MaestroInstrument, MaestroLesson
 from django.contrib.auth.decorators import login_required
 from .forms import CreateModelClass, UpdateUserForm, CreateUpdateLessonForm
 

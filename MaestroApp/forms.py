@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from MaestroApp import models
-from .models import testClass, MaestroInstrument, MaestroUser, MaestroClass, MaestroLesson
+from .models import MaestroInstrument, MaestroUser, MaestroClass, MaestroLesson
 
 User = get_user_model()
 

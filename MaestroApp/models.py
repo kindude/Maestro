@@ -1,21 +1,5 @@
 from django.db import models
-from typing import Optional
 from django.contrib.auth.models import AbstractUser, Permission, Group
-
-
-class MaestroRole(models.Model):
-    ROLE_CHOICES = (
-        ('admin', 'Admin'),
-        ('teacher', 'Teacher'),
-        ('student', 'Student'),
-    )
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='student')
-
-    def __str__(self):
-        return self.get_role_display()
-
-def get_default_role():
-    return MaestroRole.objects.get_or_create(role='student')
 
 
 class MaestroInstrument(models.Model):
@@ -53,18 +37,6 @@ class MaestroClass(models.Model):
         return self.title
 
 
-class testClass(models.Model):
-    title = models.CharField(max_length = 200)
-    instrument= models.CharField(max_length = 200)
-    teacher= models.CharField(max_length = 200)
-    price= models.IntegerField()
-    is_group= models.BooleanField(default = False)
-    capacity= models.IntegerField(default = 20)
-    availability=models.BooleanField(default = True)
-    def __str__(self):
-        return self.title
-
-
 class MaestroLesson(models.Model):
     title = models.CharField(max_length=200)
     duration = models.IntegerField(default=60) # duration in minutes
@@ -95,27 +67,7 @@ class MaestroAssignment(models.Model):
         return f"{self.title} - Due: {self.date_due.strftime('%Y-%m-%d %H:%M:%S')}"
 
 
-class RoleMixin:
-    role: Optional[MaestroRole]
-
-    def is_admin(self):
-        return self.role and self.role.role == 'admin'
-
-    def is_teacher(self):
-        return self.role and self.role.role == 'teacher'
-
-    def is_student(self):
-        return self.role and self.role.role == 'student'
-
-
-class MaestroUser(AbstractUser, RoleMixin):
-    role = models.ForeignKey(
-        MaestroRole,
-        on_delete=models.SET_DEFAULT,
-        default=None,
-        null=True,
-        related_name='users'
-    )
+class MaestroUser(AbstractUser):
     balance = models.DecimalField(decimal_places=3, max_digits=7, default=0)
     instruments = models.ManyToManyField(MaestroInstrument, related_name="users", blank=True)
     classes = models.ManyToManyField(MaestroClass, related_name="users", blank=True)
