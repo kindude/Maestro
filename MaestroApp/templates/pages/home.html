@@ -3,9 +3,84 @@
 {% block title_block %} Home {% endblock %}
 
 {% block content %}
+<div class="container mt-5">
+    <div class="text-center">
+        <h1>𝄞 Welcome to Maestro 𝄢</h1>
+        <p>Your personal space for learning, teaching, and exploring music.</p>
+    </div>
 
-    {% for class_instance in classes %}
-        {{ class_instance }}
-    {% endfor %}
+    <hr>
 
+    <h2>Available Classes</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">🎻 Violin Masterclass</h5>
+                    <p>Learn advanced violin techniques with expert instructors.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">🎹 Piano for Beginners</h5>
+                    <p>Start your piano journey with easy step-by-step lessons.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">🎷 Jazz Saxophone</h5>
+                    <p>Master improvisation and jazz techniques on the saxophone.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">🥁 Drum Fundamentals</h5>
+                    <p>Learn basic to advanced drumming patterns and techniques.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">🎤 Vocal Training</h5>
+                    <p>Improve your vocal range, control, and performance skills.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">🎸 Acoustic Guitar Essentials</h5>
+                    <p>Learn how to play guitar chords, strumming, and fingerstyle.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <h4>🎶 Why Choose Maestro?</h4>
+    <ul>
+        <li>✔ Structured lessons tailored for all levels</li>
+        <li>✔ Connect with experienced music teachers</li>
+        <li>✔ Track your progress with assignments</li>
+        <li>✔ Join competitions and live performances</li>
+    </ul>
+
+    <hr>
+
+    <h5>💡 Get Started Today!</h5>
+    <p>Sign up now and begin your musical journey.</p>
+</div>
 {% endblock %}

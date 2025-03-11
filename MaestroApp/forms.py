@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from MaestroApp import models
-from .models import testClass, MaestroInstrument, MaestroUser, MaestroClass, MaestroLesson
+from .models import testClass, MaestroInstrument, MaestroUser, MaestroClass, MaestroLesson, Assignment
 
 User = get_user_model()
 
@@ -105,3 +105,7 @@ class CreateUpdateLessonForm(forms.ModelForm):
             'dt': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'associated_class': forms.Select(attrs={'class': 'form-control'}),
         }
+class AssignmentForm(forms.ModelForm):
+    class Meta:
+        model = Assignment
+        fields = ['title', 'lesson', 'due_date'] 

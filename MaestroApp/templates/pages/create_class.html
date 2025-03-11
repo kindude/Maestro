@@ -12,9 +12,6 @@
         <button type="submit" class="btn btn-primary">
             {% if maestro_class %} Update Class {% else %} Create Class {% endif %}
         </button>
-        <a href="{% url 'lesson_create' maestro_class.id %}">
-            Add Lesson
-        </a>
 
     </form>
 
