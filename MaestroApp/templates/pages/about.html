@@ -1,9 +1,104 @@
 {% extends 'components/layouts/base.html' %}
-{%  load static %}
+{% load static %}
 
 {% block title %} About us {% endblock %}
 {% block content %}
 
-    <h1> Hello from the About us Page</h1>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow p-4 h-100">
+            <div class="card-body">
+                <h5>🎶 Music Tip of the Day</h5>
+                <p>"Practice like you’ve never won. Perform like you’ve never lost." – Anonymous</p>
+
+                <h4>Welcome to Maestro! 🎶</h4>
+                <p>Your personalized space for music learning, assignments, and progress tracking.</p>
+                
+                <h5>📅 Upcoming Events</h5>
+                <ul>
+                    {% for event in user.upcoming_events.all %}
+                        <li>📍 <strong>{{ event.title }}</strong> - {{ event.date }}</li>
+                    {% empty %}
+                        <li>No upcoming events. Stay tuned!</li>
+                    {% endfor %}
+                </ul>
+
+                <h5>🏆 Top Performers This Month</h5>
+                <ul>
+                    {% for student in top_students %}
+                        <li>🎖 {{ student.first_name }} ({{ student.completed_assignments }} completed assignments)</li>
+                    {% empty %}
+                        <li>No rankings yet. Complete assignments to get on the leaderboard!</li>
+                    {% endfor %}
+                </ul>
+
+                <h5>📌 How to Use:</h5>
+                <ul>
+                    <li>📚 <strong>Lessons:</strong> Access your assigned lessons.</li>
+                    <li>📝 <strong>Assignments:</strong> Complete and submit your work.</li>
+                    <li>📊 <strong>Performance:</strong> Track your progress and get feedback.</li>
+                </ul>
+
+                <h5>📢 Latest Updates:</h5>
+                <ul>
+                    <li>🚀 <strong>New:</strong> Upload video assignments!</li>
+                    <li>🎶 <strong>Concertos:</strong> Masterclass on March 20th.</li>
+                </ul>
+
+                <h5>💡 Need Help?</h5>
+                <p>Email <a href="mailto:support@maestro.com" style="color: #007bff; font-weight: bold;">support@maestro.com</a> </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow p-4 h-100">
+            <h5>✅ To-Do List</h5>
+
+            <div class="input-group mb-3">
+                <input type="text" id="taskInput" class="form-control" placeholder="Add a task..." aria-label="Task">
+                <button class="btn btn-primary" onclick="addTask()">➕ Add</button>
+            </div>
+
+            <ul id="todoList" class="list-group">
+                {% for task in user.todo_list.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <input type="checkbox" class="form-check-input me-2" {% if task.completed %}checked{% endif %}>
+                        <span>{{ task.title }}</span>
+                        <button class="btn btn-danger btn-sm" onclick="removeTask(this)">❌</button>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No tasks yet. Add some!</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addTask() {
+        var input = document.getElementById("taskInput");
+        var taskText = input.value.trim();
+
+        if (taskText !== "") {
+            var list = document.getElementById("todoList");
+
+            var li = document.createElement("li");
+            li.className = "list-group-item d-flex justify-content-between align-items-center";
+            li.innerHTML = `
+                <input type="checkbox" class="form-check-input me-2">
+                <span>${taskText}</span>
+                <button class="btn btn-danger btn-sm" onclick="removeTask(this)">❌</button>
+            `;
+
+            list.appendChild(li);
+            input.value = ""; 
+        }
+    }
+
+    function removeTask(button) {
+        button.parentElement.remove(); 
+    }
+</script>
 
 {% endblock %}

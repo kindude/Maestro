@@ -1,10 +1,12 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .decorators import student_required, teacher_required, admin_required, is_admin
-from .models import MaestroClass, testClass, MaestroInstrument, MaestroLesson
+from .models import MaestroClass, testClass, MaestroInstrument, MaestroLesson, Assignment
 from django.contrib.auth.decorators import login_required
-from .forms import CreateModelClass, UpdateUserForm, CreateUpdateLessonForm
+from .forms import CreateModelClass, UpdateUserForm, CreateUpdateLessonForm, AssignmentForm
+from django.http import JsonResponse
+
 
 
 def index(request):
@@ -122,3 +124,36 @@ def update_user_profile(request):
 @login_required
 def notifications(request):
     return render(request, 'pages/notifications.html')
+
+@login_required
+def mark_notification_read(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id, recipient=request.user)
+    notification.is_read = True
+    notification.save()
+    return JsonResponse({"success": True})
+
+def assignment_detail_view(request, class_id, lesson_id, assignment_id):
+    assignment = get_object_or_404(Assignment, id=assignment_id, lesson__id=lesson_id, lesson__associated_class__id=class_id)
+    return render(request, 'assignments/detail.html', {'assignment': assignment})
+
+def is_admin_or_teacher(user):
+    return user.is_staff or user.groups.filter(name='Teacher').exists()
+
+@login_required
+def assignments_list_view(request):  # <- Make sure the name is correct
+    assignments = Assignment.objects.all()
+
+    # Handle form submission (adding a new assignment)
+    if request.method == 'POST':
+        form = AssignmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('assignments_list')
+    else:
+        form = AssignmentForm()
+
+    return render(request, 'assignments/list.html', {
+        'assignments': assignments,
+        'form': form,
+        'is_admin_or_teacher': is_admin_or_teacher(request.user)
+    })

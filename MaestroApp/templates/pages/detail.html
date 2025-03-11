@@ -1,0 +1,17 @@
+{% extends 'components/layouts/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow p-4">
+        <div class="card-body">
+            <h4>Assignment Details</h4>
+            <p><strong>Title:</strong> {{ assignment.title }}</p>
+            <p><strong>Due Date:</strong> {{ assignment.due_date }}</p>
+            <p><strong>Lesson:</strong> {{ assignment.lesson }}</p>
+            <p><strong>Class:</strong> {{ assignment.lesson.associated_class }}</p>
+            <p><strong>Description:</strong> {{ assignment.description }}</p>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

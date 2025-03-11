@@ -2,7 +2,6 @@ from django.db import models
 from typing import Optional
 from django.contrib.auth.models import AbstractUser, Permission, Group
 
-
 class MaestroRole(models.Model):
     ROLE_CHOICES = (
         ('admin', 'Admin'),
@@ -85,14 +84,11 @@ class MaestroAssignment(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField(max_length=1000)
     date_due = models.DateTimeField()
-    lesson = models.ForeignKey(
-        MaestroLesson,
-        on_delete=models.CASCADE,
-        related_name="assignments"
-    )
+    lesson = models.ForeignKey(MaestroLesson, on_delete=models.CASCADE)
+
 
     def __str__(self):
-        return f"{self.title} - Due: {self.date_due.strftime('%Y-%m-%d %H:%M:%S')}"
+        return f"{self.title}"
 
 
 class RoleMixin:
@@ -124,6 +120,26 @@ class MaestroUser(AbstractUser, RoleMixin):
     def __str__(self):
         full_name = f"{self.first_name} {self.last_name}".strip()
         return full_name if full_name else self.username
+    
 
+class Class(models.Model):  # Ensure this is correctly named and defined
+    name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
+class Lesson(models.Model):
+    name = models.CharField(max_length=255)
+    associated_class = models.ForeignKey(Class, on_delete=models.CASCADE)  # Correct reference
+
+    def __str__(self):
+        return self.name
+
+class Assignment(models.Model):
+    title = models.CharField(max_length=255)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    due_date = models.DateField()
+
+    def __str__(self):
+        return self.title
 
