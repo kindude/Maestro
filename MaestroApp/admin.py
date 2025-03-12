@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import MaestroRole, MaestroInstrument, MaestroClass, MaestroLesson, MaestroAssignment, MaestroUser, testClass
+from .models import MaestroInstrument, MaestroClass, MaestroLesson, MaestroAssignment, MaestroUser
 
-admin.site.register(MaestroRole)
+
 admin.site.register(MaestroInstrument)
 admin.site.register(MaestroClass)
 admin.site.register(MaestroLesson)
 admin.site.register(MaestroAssignment)
 admin.site.register(MaestroUser)
-admin.site.register(testClass)
+admin.site.site_header = "Maestro Administration"
+admin.site.index_title = "Admin Dashboard"

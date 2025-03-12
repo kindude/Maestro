@@ -1,0 +1,109 @@
+{% extends 'components/layouts/base.html' %}
+{% load user_tags %}
+{% block content %}
+<div class="container">
+    <div class="class-header">
+        <h1>{{ class.title }}</h1>
+        <p><strong>Duration:</strong> {{ class.duration }} weeks</p>
+        <p><strong>Capacity:</strong> {{ class.capacity }} students</p>
+        <p><strong>Instrument:</strong> {{ class.instrument }}</p>
+        <p><strong>Status:</strong> {% if class.available %} Open for enrollment {% else %} Closed {% endif %}</p>
+    </div>
+
+    <div class="class-body">
+        <h2>Teachers</h2>
+        <ul>
+            {% for teacher in class.teachers.all %}
+                <li>{{ teacher.first_name }} {{ teacher.last_name }} ({{ teacher.username }})</li>
+            {% empty %}
+                <li>No teachers assigned yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="class-body">
+        <h2>Lessons</h2>
+        <ul>
+            {% for lesson in class.lessons.all %}
+                <li>
+                    <a href="{% url 'lesson_view' class.slug lesson.slug %}" class="lesson-link">{{ lesson.title }}</a>
+                </li>
+            {% empty %}
+                <li>No lessons created yet.</li>
+            {% endfor %}
+        </ul>
+
+        {% if user|is_admin %}
+            <a href="{% url 'lesson_create' class.slug %}" class="btn btn-success">➕ Create Lesson</a>
+        {% endif %}
+    </div>
+
+    <div class="actions">
+        {% if user|is_admin %}
+            <a href="{% url 'class_edit' class.slug %}" class="btn btn-primary">Edit Class</a>
+        {% endif %}
+        <a href="{% url 'find_classes' %}" class="btn btn-secondary">Back to Classes</a>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .class-header {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    h1 {
+        color: #007bff;
+    }
+    .class-body {
+        margin-top: 20px;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .lesson-link {
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+    .lesson-link:hover {
+        color: #007bff;
+    }
+    .actions {
+        margin-top: 30px;
+        text-align: center;
+    }
+    .btn {
+        padding: 10px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        display: inline-block;
+        margin: 5px;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+</style>
+{% endblock %}

@@ -27,7 +27,7 @@
             <tbody>
                 {% for class in classes %}
                 <tr>
-                    <td><a href="{% url 'class_edit' class.id %}" class="btn btn-success">{{ class.title }}</a></td>
+                    <td><a href="{% url 'class_view' class.slug %}" class="btn btn-success">{{ class.title }}</a></td>
                     <td>{{ class.duration|default:"Data Unavailable" }}</td>
                     <td>{{ class.instrument }}</td>
                     <td>

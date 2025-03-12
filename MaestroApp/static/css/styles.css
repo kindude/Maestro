@@ -262,3 +262,37 @@ input {
 .btn-success:hover {
     background-color: #218838;
 }
+
+.google-login {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 8px 12px;
+    width: 220px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    color: #444;
+    transition: all 0.3s ease-in-out;
+}
+
+.google-btn img {
+    width: 20px; /* Adjust the width */
+    height: 20px; /* Adjust the height */
+    margin-right: 8px; /* Adds some spacing between the text and the icon */
+}
+
+.google-btn:hover {
+    background-color: #f8f8f8;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+

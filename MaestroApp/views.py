@@ -1,13 +1,10 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
 from .decorators import student_required, teacher_required, admin_required, is_admin
-from .models import MaestroClass, testClass, MaestroInstrument, MaestroLesson, Assignment
+from .models import MaestroClass, MaestroLesson
 from django.contrib.auth.decorators import login_required
-from .forms import CreateModelClass, UpdateUserForm, CreateUpdateLessonForm, AssignmentForm
-from django.http import JsonResponse
-
-
+from .forms import CreateModelClass, UpdateUserForm, CreateUpdateLessonForm
+from django.utils.text import slugify
 
 def index(request):
     classes_objects = MaestroClass.objects.all()
@@ -32,10 +29,20 @@ def play(request):
     return render(request, 'pages/play.html')
 
 
+def class_view(request, slug):
+    return render(request, template_name='pages/class.html', context={'class': get_object_or_404(MaestroClass, slug=slug)})
+
+
+def lesson_view(request, class_slug, lesson_slug):
+    return render(request, template_name='pages/lesson.html', context={'lesson': get_object_or_404(MaestroLesson,
+                                                                                                   slug=lesson_slug)})
+
+
 @login_required
-def class_edit(request, class_id=None):
-    if class_id:
-        maestro_class = get_object_or_404(MaestroClass, id=class_id)
+@admin_required
+def class_edit(request, slug):
+    if slug:
+        maestro_class = get_object_or_404(MaestroClass, slug=slug)
         if not (is_admin(request.user) or request.user in maestro_class.teachers.all()):
             return redirect("find_classes")
     else:
@@ -59,12 +66,16 @@ def class_edit(request, class_id=None):
 
 
 @login_required
-def lesson_create_edit(request, class_id, lesson_id=None):
-    if lesson_id:
-        maestro_lesson = get_object_or_404(MaestroLesson, id=lesson_id)
+def lesson_create_edit(request, class_slug, lesson_slug=None):
+
+    maestro_class = get_object_or_404(MaestroClass, slug=class_slug)
+
+    if lesson_slug:
+        maestro_lesson = get_object_or_404(MaestroLesson, slug=lesson_slug, associated_class=maestro_class)
         if not (is_admin(request.user) or request.user in maestro_lesson.associated_class.teachers.all()):
             return redirect("find_classes")
     else:
+        # Creating a new lesson
         if not is_admin(request.user):
             return redirect("find_classes")
 
@@ -74,23 +85,19 @@ def lesson_create_edit(request, class_id, lesson_id=None):
         form = CreateUpdateLessonForm(request.POST, instance=maestro_lesson)
         if form.is_valid():
             maestro_lesson = form.save(commit=False)
+            maestro_lesson.associated_class = maestro_class  # ✅ Associate the lesson with the class
+            if not maestro_lesson.slug:
+                maestro_lesson.slug = slugify(maestro_lesson.title)  # ✅ Ensure slug is set
             maestro_lesson.save()
-            return redirect("find_classes")
+            return redirect("lesson_view", class_slug=maestro_class.slug, lesson_slug=maestro_lesson.slug)
     else:
         form = CreateUpdateLessonForm(instance=maestro_lesson)
 
-    return render(request, "pages/create_edit_lesson.html", {"form": form, "maestro_lesson": maestro_lesson})
-
-# Test view (optional, can be removed)
-def test_view(request):
-    return render(request, 'pages/login.html')
-
-@login_required
-def test_dashboard(request):
-    user = request.user
-    context = request.user
-    return render(request, 'pages/dashboard.html')
-
+    return render(request, "pages/create_edit_lesson.html", {
+        "form": form,
+        "maestro_lesson": maestro_lesson,
+        "maestro_class": maestro_class,  # ✅ Pass class info to the template
+    })
 
 def logout_view(request):
     logout(request)
@@ -128,35 +135,3 @@ def update_user_profile(request):
 def notifications(request):
     return render(request, 'pages/notifications.html')
 
-@login_required
-def mark_notification_read(request, notification_id):
-    notification = get_object_or_404(Notification, id=notification_id, recipient=request.user)
-    notification.is_read = True
-    notification.save()
-    return JsonResponse({"success": True})
-
-def assignment_detail_view(request, class_id, lesson_id, assignment_id):
-    assignment = get_object_or_404(Assignment, id=assignment_id, lesson__id=lesson_id, lesson__associated_class__id=class_id)
-    return render(request, 'assignments/detail.html', {'assignment': assignment})
-
-def is_admin_or_teacher(user):
-    return user.is_staff or user.groups.filter(name='Teacher').exists()
-
-@login_required
-def assignments_list_view(request):  # <- Make sure the name is correct
-    assignments = Assignment.objects.all()
-
-    # Handle form submission (adding a new assignment)
-    if request.method == 'POST':
-        form = AssignmentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('assignments_list')
-    else:
-        form = AssignmentForm()
-
-    return render(request, 'assignments/list.html', {
-        'assignments': assignments,
-        'form': form,
-        'is_admin_or_teacher': is_admin_or_teacher(request.user)
-    })
