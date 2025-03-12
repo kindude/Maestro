@@ -62,7 +62,7 @@ def class_edit(request, slug):
     else:
         form = CreateModelClass(instance=maestro_class)
 
-    return render(request, "pages/create_class.html", {"form": form, "maestro_class": maestro_class})
+    return render(request, "pages/create_edit_class.html", {"form": form, "maestro_class": maestro_class})
 
 
 @login_required
