@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    {% load static %}
+        {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <script src="{% static 'js/removeErrors.js' %}"></script>
 </head>
@@ -37,6 +37,19 @@
                 </div>
 
                 <button type="submit" class="enter-btn">Sign in</button>
+                                <!-- Move social login buttons inside the form -->
+                <div class="social-login">
+                    <button class="google-btn">
+                        <img src="{% static 'images/google-icon.png' %}" alt="Google Logo">
+                        Sign in with Google
+                    </button>
+
+                    <button class="apple-btn">
+                        <img src="{% static 'images/apple-icon.png' %}" alt="Apple Logo">
+                        Sign in with Apple
+                    </button>
+                </div>
+            </form>
             </form>
         </div>
     </div>

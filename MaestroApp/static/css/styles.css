@@ -262,3 +262,61 @@ input {
 .btn-success:hover {
     background-color: #218838;
 }
+
+/* Social Login Buttons */
+.social-login {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Google Button */
+.google-btn, .apple-btn {
+    width: 150px;
+    max-width: 300px;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+/* Google Button Specific */
+.google-btn {
+    background-color: white;
+    border: 1px solid #ccc;
+    color: #333;
+}
+
+.google-btn img {
+    width: 20px;
+    margin-right: 10px;
+}
+
+/* Apple Button Specific */
+.apple-btn {
+    background-color: black;
+    color: white;
+}
+
+.apple-btn img {
+    width: 20px;
+    margin-right: 10px;
+}
+
+/* Hover Effects */
+.google-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.apple-btn:hover {
+    background-color: #333;
+}
+

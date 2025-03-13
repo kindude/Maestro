@@ -157,3 +157,38 @@ def assignments_list_view(request):  # <- Make sure the name is correct
         'form': form,
         'is_admin_or_teacher': is_admin_or_teacher(request.user)
     })
+
+def is_teacher(user):
+    return user.is_staff  # Only teachers/admins can create/edit assignments
+
+@login_required
+def assignment_detail(request, class_id, lesson_id, assignment_id):
+    assignment = get_object_or_404(Assignment, id=assignment_id, lesson__id=lesson_id)
+    return render(request, "assignments.html", {"assignment": assignment})
+
+@user_passes_test(is_teacher)
+def assignment_create(request, class_id, lesson_id):
+    if request.method == "POST":
+        form = AssignmentForm(request.POST)
+        if form.is_valid():
+            assignment = form.save(commit=False)
+            assignment.lesson = get_object_or_404(MaestroLesson, id=lesson_id)
+            assignment.save()
+            return redirect("assignment_detail", class_id=class_id, lesson_id=lesson_id, assignment_id=assignment.id)
+    else:
+        form = AssignmentForm()
+    
+    return render(request, "assignment_create.html", {"form": form})
+
+@user_passes_test(is_teacher)
+def assignment_edit(request, class_id, lesson_id, assignment_id):
+    assignment = get_object_or_404(Assignment, id=assignment_id, lesson__id=lesson_id)
+    if request.method == "POST":
+        form = AssignmentForm(request.POST, instance=assignment)
+        if form.is_valid():
+            form.save()
+            return redirect("assignment_detail", class_id=class_id, lesson_id=lesson_id, assignment_id=assignment.id)
+    else:
+        form = AssignmentForm(instance=assignment)
+    
+    return render(request, "assignment_edit.html", {"form": form})
