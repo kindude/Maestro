@@ -1,16 +1,14 @@
 {% extends 'components/layouts/base.html' %}
 
-
 {% block content %}
-
 <div class="col-md-4">
     <div class="card shadow p-4 h-100">
         <h5>🔔 Notifications</h5>
         <ul id="notificationList" class="list-group">
-            {% for notification in user.notifications.all %}
+            {% for notification in notifications %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span>{{ notification.message }}</span>
-                    <button class="btn btn-light btn-sm" onclick="removeNotification(this)">❌</button>
+                    <button class="btn btn-light btn-sm" onclick="markAsRead('{{ notification.id }}', this)">✅ Mark as Read</button>
                 </li>
             {% empty %}
                 <li class="list-group-item text-muted">No new notifications.</li>
@@ -20,10 +18,22 @@
 </div>
 
 <script>
-    function removeNotification(button) {
-        button.parentElement.remove(); 
+    function markAsRead(notificationId, button) {
+        fetch(`/notifications/mark-as-read/${notificationId}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => {
+            if (response.ok) {
+                button.parentElement.remove();
+            } else {
+                alert("Failed to mark as read");
+            }
+        });
     }
 </script>
-
-
 {% endblock %}

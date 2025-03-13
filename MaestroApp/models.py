@@ -1,9 +1,11 @@
 import uuid
+from django.utils.timezone import now
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Permission, Group
 from django.utils.text import slugify
-
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 class MaestroInstrument(models.Model):
     INSTRUMENT_CHOICES = (
@@ -97,6 +99,7 @@ class MaestroUser(AbstractUser):
     instruments = models.ManyToManyField(MaestroInstrument, related_name="users", blank=True)
     classes = models.ManyToManyField(MaestroClass, related_name="users", blank=True)
     assignments = models.ManyToManyField(MaestroAssignment, related_name="users", blank=True)
+    notifications = models.ManyToManyField("MaestroNotification", related_name="recipients", blank=True)
 
     def save(self, *args, **kwargs):
         if self.pk is None:
@@ -114,3 +117,30 @@ class MaestroUser(AbstractUser):
     class Meta:
         verbose_name = "Maestro User"
         verbose_name_plural = "Maestro Users"
+
+
+class MaestroNotification(models.Model):
+    NOTIFICATION_TYPES = [
+        ("class_added", "Added to Class"),
+        ("class_removed", "Removed from Class"),
+        ("lesson_added", "New Lesson Added"),
+        ("assignment_added", "New Assignment Added"),
+    ]
+
+    users = models.ManyToManyField("MaestroUser", related_name="received_notifications")
+    title = models.CharField(max_length=150)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=now)
+    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
+    object_id = models.PositiveIntegerField(null=True, blank=True)
+    related_object = GenericForeignKey("content_type", "object_id")
+
+    def __str__(self):
+        return f"[{self.notification_type}] {self.title}"
+
+    def mark_as_read(self, user):
+        self.users.remove(user)
+

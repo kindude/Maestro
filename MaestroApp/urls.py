@@ -2,7 +2,7 @@
 from django.urls import path
 from .views import (index, about, play, dashboard, class_edit, find_classes, \
     update_user_profile, notifications, lesson_create_edit, class_view, lesson_view, assignment_create_edit,
-                    assignment_view, enroll_students, remove_student, remove_assignment, remove_lesson)
+                    assignment_view, enroll_students, remove_student, remove_assignment, remove_lesson, mark_as_read)
 from MaestroApp.auth_views import *
 
 
@@ -45,4 +45,8 @@ urlpatterns = [
     # enroll student
     path('profile/enroll-students/<slug:class_slug>/', enroll_students, name='enroll_students'),
     path('class/<slug:class_slug>/remove-student/<str:student_username>/', remove_student, name='remove_student'),
-]
+
+    # notifications
+    path('notifications/mark-as-read/<int:notification_id>/', mark_as_read,
+         name='mark_as_read')
+    ]

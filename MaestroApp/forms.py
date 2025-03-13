@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from MaestroApp import models
 from .models import MaestroInstrument, MaestroUser, MaestroClass, MaestroLesson, MaestroAssignment
-
+from django.core.exceptions import ValidationError
 User = get_user_model()
 
 
@@ -73,15 +73,28 @@ class UpdateUserForm(forms.ModelForm):
     first_name = forms.CharField(required=False, max_length=150)
     last_name = forms.CharField(required=False, max_length=150)
     date_of_birth = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    username = forms.CharField(required=False, max_length=150)
 
     class Meta:
         model = MaestroUser
-        fields = ['first_name', 'last_name', 'date_of_birth']
+        fields = ['first_name', 'last_name', 'date_of_birth', 'username']
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'})
         }
+
+    def clean_username(self):
+        """
+        Ensure the username is unique before saving.
+        """
+        username = self.cleaned_data.get('username')
+        if username:
+            existing_user = MaestroUser.objects.filter(username=username).exclude(pk=self.instance.pk)
+            if existing_user.exists():
+                raise ValidationError("This username is already taken. Please choose another.")
+        return username
 
 class CreateUpdateLessonForm(forms.ModelForm):
     title = forms.CharField(required=False, max_length=200)

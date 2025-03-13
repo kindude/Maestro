@@ -1,13 +1,15 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect, get_object_or_404
 from .decorators import student_required, teacher_required, admin_required, is_admin
-from .models import MaestroClass, MaestroLesson, MaestroAssignment, MaestroUser
+from .models import MaestroClass, MaestroLesson, MaestroAssignment, MaestroUser, MaestroNotification
 from django.contrib.auth.decorators import login_required
 from .forms import CreateModelClass, UpdateUserForm, CreateUpdateLessonForm, CreateUpdateAssignmentForm, \
     EnrollStudentsForm
 from django.utils.text import slugify
 from django.contrib import messages
-
+from django.views.decorators.csrf import csrf_exempt
+from .utils import create_notification
+from django.http import JsonResponse
 
 def index(request):
     classes_objects = MaestroClass.objects.all()
@@ -82,6 +84,13 @@ def assignment_create_edit(request, class_slug, lesson_slug, assignment_slug=Non
                 if assignment not in student.assignments.all():
                     student.assignments.add(assignment)
 
+            create_notification(
+                users=maestro_class.students.all(),
+                title="New Assignment Added",
+                message=f"A new assignment '{assignment.title}' has been added to {maestro_class.title}.",
+                notification_type="assignment_added",
+                related_object=assignment
+            )
             messages.success(request, "Assignment successfully saved and assigned to students.")
 
             return redirect("assignment_view", class_slug=assignment.lesson.associated_class.slug,
@@ -166,6 +175,15 @@ def lesson_create_edit(request, class_slug, lesson_slug=None):
             if not maestro_lesson.slug:
                 maestro_lesson.slug = slugify(maestro_lesson.title)
             maestro_lesson.save()
+
+            create_notification(
+                users=maestro_class.students.all(),
+                title="New Lesson Added",
+                message=f"A new lesson '{maestro_lesson.title}' has been added to {maestro_class.title}.",
+                notification_type="lesson_added",
+                related_object=maestro_lesson
+            )
+
             return redirect("lesson_view", class_slug=maestro_class.slug, lesson_slug=maestro_lesson.slug)
     else:
         form = CreateUpdateLessonForm(instance=maestro_lesson)
@@ -175,6 +193,7 @@ def lesson_create_edit(request, class_slug, lesson_slug=None):
         "maestro_lesson": maestro_lesson,
         "maestro_class": maestro_class
     })
+
 
 @login_required
 @teacher_required
@@ -227,7 +246,9 @@ def update_user_profile(request):
 
 @login_required
 def notifications(request):
-    return render(request, 'pages/notifications.html')
+    notifications_ = MaestroUser.objects.get(id=request.user.id).notifications.all()
+
+    return render(request, 'pages/notifications.html', context={"notifications": notifications_})
 
 
 @login_required
@@ -246,6 +267,15 @@ def enroll_students(request, class_slug):
             maestro_class.students.add(student)
             student.instruments.add(maestro_class.instrument)
             student.classes.add(maestro_class)
+
+            create_notification(
+                users=student,
+                title="Enrolled in a Class",
+                message=f"You have been added to the class: {maestro_class.title}.",
+                notification_type="class_added",
+                related_object=maestro_class
+            )
+
             return redirect("class_view", slug=maestro_class.slug)
     else:
         form = EnrollStudentsForm()
@@ -267,10 +297,33 @@ def remove_student(request, class_slug, student_username):
     if student in maestro_class.students.all():
         maestro_class.students.remove(student)
         student.classes.remove(maestro_class)
+        create_notification(
+            users=student,
+            title="Removed from Class",
+            message=f"You have been removed from the class: {maestro_class.title}.",
+            notification_type="class_removed",
+            related_object=maestro_class
+        )
+
         messages.success(request, f"{student.username} has been removed from {maestro_class.title}.")
     else:
         messages.warning(request, "This student is not in the class.")
 
     return redirect("class_view", slug=class_slug)
+
+
+@login_required
+@csrf_exempt
+def mark_as_read(request, notification_id):
+    if request.method == "POST":
+        try:
+            user = MaestroUser.objects.get(id=request.user.id)
+            notification = MaestroNotification.objects.get(id=notification_id)
+            user.notifications.remove(notification)
+            return JsonResponse({"message": "Notification marked as read"}, status=200)
+        except MaestroNotification.DoesNotExist:
+            return JsonResponse({"error": "Notification not found"}, status=404)
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
 
 

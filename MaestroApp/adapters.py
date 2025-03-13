@@ -13,7 +13,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         email = sociallogin.account.extra_data.get("email")
 
         if not email:
-            return  # No email found, let AllAuth handle it
+            return
 
         try:
             user = EmailAddress.objects.get(email=email).user
