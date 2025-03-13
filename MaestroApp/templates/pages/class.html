@@ -38,6 +38,26 @@
         {% endif %}
     </div>
 
+    <div class="class-body">
+        <h2>Enrolled Students</h2>
+        <ul>
+            {% for student in class.students.all %}
+                <li>
+                    {{ student.first_name }} {{ student.last_name }} ({{ student.username }})
+
+                    {% if user|is_admin or user in class.teachers.all %}
+                        <form method="post" action="{% url 'remove_student' class.slug student.username %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li>No students enrolled yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
     <div class="actions">
         {% if user|is_admin %}
             <a href="{% url 'class_edit' class.slug %}" class="btn btn-primary">Edit Class</a>
@@ -104,6 +124,14 @@
     .btn-success {
         background-color: #28a745;
         color: white;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        font-size: 12px;
+        cursor: pointer;
     }
 </style>
 {% endblock %}

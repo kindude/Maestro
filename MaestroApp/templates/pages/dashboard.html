@@ -23,54 +23,68 @@
 
             <hr>
 
-
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Instruments I Play</h5>
-                    <ul class="list-group">
-                        {% for instrument in user.instruments.all %}
-                            <li class="list-group-item">{{ instrument }}</li>
-                        {% empty %}
-                            <li class="list-group-item text-muted">No instruments listed.</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <div class="col-md-6">
-                    <h5>Classes I Have</h5>
-                    <ul class="list-group">
-                        {% for class in user.classes.all %}
-                            <li class="list-group-item">{{ class }}</li>
-                        {% empty %}
-                            <li class="list-group-item text-muted">No classes assigned.</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+            <h5>Instruments I Play</h5>
+            <ul class="list-group">
+                {% for instrument in user.instruments.all %}
+                    <li class="list-group-item">{{ instrument.instrument }}</li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No instruments listed.</li>
+                {% endfor %}
+            </ul>
 
             <hr>
 
-            <h5>Assignments Due</h5>
-            {% for assignment in user.assignments.all %}
-                <div class="border p-3 rounded mb-3">
-                    <p><strong>Assignment:</strong>
-                        <a href="{% url 'assignment_detail' class_id=assignment.lesson.associated_class.id lesson_id=assignment.lesson.id assignment_id=assignment.id %}">
+            <h5>Classes I Teach</h5>
+            <ul class="list-group">
+                {% for class in user.teaching_classes.all %}
+                    <li class="list-group-item">
+                        <a href="{% url 'class_view' class.slug %}">{{ class.title }}</a>
+
+                        {% if user|is_admin or user in class.teachers.all %}
+                            <a href="{% url 'enroll_students' class.slug %}" class="btn btn-success btn-sm float-end">
+                                Enroll Students
+                            </a>
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No classes assigned.</li>
+                {% endfor %}
+            </ul>
+
+            <hr>
+
+            <h5>Classes I Am Enrolled In</h5>
+            <ul class="list-group">
+                {% for class in user.classes.all %}
+                    <li class="list-group-item">
+                        <a href="{% url 'class_view' class.slug %}">{{ class.title }}</a>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No enrolled classes.</li>
+                {% endfor %}
+            </ul>
+
+            <hr>
+
+            <h5>My Assignments</h5>
+            <ul class="list-group">
+                {% for assignment in user.assignments.all %}
+                    <li class="list-group-item">
+                        <a href="{% url 'assignment_view' class_slug=assignment.lesson.associated_class.slug lesson_slug=assignment.lesson.slug assignment_slug=assignment.slug %}">
                             {{ assignment.title }}
                         </a>
-
-                    </p>
-                    <p><strong>Due Date:</strong> {{ assignment.d }}</p>
-                    <p><strong>Related Lesson:</strong> {{ assignment.lesson }}</p>
-                    <p><strong>Related Class:</strong> {{ assignment.lesson.associated_class }}</p>
-                </div>
-            {% empty %}
-                <p>No pending assignments.</p>
-            {% endfor %}
-
-
+                        <span class="badge bg-warning text-dark">Due: {{ assignment.date_due|date:"D, d M Y" }}</span>
+                        <br>
+                        <small>Lesson: <a href="{% url 'lesson_view' class_slug=assignment.lesson.associated_class.slug lesson_slug=assignment.lesson.slug %}">{{ assignment.lesson }}</a></small>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No assignments assigned.</li>
+                {% endfor %}
+            </ul>
 
             <div class="text-center mt-4">
                 <a href="{% url 'update_user_profile' %}" class="btn btn-primary">Edit Details</a>
+
                 {% if user|is_admin and user.is_authenticated %}
                     <a href="{% url 'create_class' %}" class="btn btn-secondary">Create a Class</a>
                 {% endif %}

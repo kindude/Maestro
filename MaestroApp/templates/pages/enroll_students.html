@@ -1,0 +1,19 @@
+{% extends 'components/layouts/base.html' %}
+
+
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow p-4">
+        <div class="card-body">
+            <h4>Enroll Students in {{ maestro_class.title }}</h4>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Enroll Student</button>
+            </form>
+            <a href="{% url 'class_view' maestro_class.slug %}" class="btn btn-secondary mt-3">Back to Class</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

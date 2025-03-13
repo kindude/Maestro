@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from MaestroApp import models
-from .models import  MaestroInstrument, MaestroUser, MaestroClass, MaestroLesson
+from .models import MaestroInstrument, MaestroUser, MaestroClass, MaestroLesson, MaestroAssignment
 
 User = get_user_model()
 
@@ -89,19 +89,49 @@ class CreateUpdateLessonForm(forms.ModelForm):
     is_group = forms.BooleanField()
     price = forms.DecimalField(decimal_places=3, max_digits=7)
     dt = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
-    associated_class = forms.ModelChoiceField(
-        queryset=MaestroClass.objects.all(),
-        empty_label="Select a Class",
-        required=True)
 
     class Meta:
         model = MaestroLesson
-        fields = ['title', 'duration', 'is_group', 'price', 'dt', 'associated_class']
+        fields = ['title', 'duration', 'is_group', 'price', 'dt']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'duration': forms.NumberInput(attrs={'class': 'form-control'}),
             'is_group': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'dt': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'associated_class': forms.Select(attrs={'class': 'form-control'}),
         }
+
+
+class CreateUpdateAssignmentForm(forms.ModelForm):
+    title = forms.CharField(
+        max_length=200,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter assignment title'}),
+        required=True
+    )
+
+    text = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Enter assignment details'}),
+        required=True
+    )
+
+    date_due = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+        required=True
+    )
+
+    attachment = forms.FileField(
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+        required=False
+    )
+
+    class Meta:
+        model = MaestroAssignment
+        fields = ['title', 'text', 'date_due', 'attachment']
+
+
+class EnrollStudentsForm(forms.Form):
+    student = forms.ModelChoiceField(
+        queryset=MaestroUser.objects.all().order_by("username"),
+        empty_label="Select a Student",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )

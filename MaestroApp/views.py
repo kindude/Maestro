@@ -1,10 +1,13 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect, get_object_or_404
 from .decorators import student_required, teacher_required, admin_required, is_admin
-from .models import MaestroClass, MaestroLesson
+from .models import MaestroClass, MaestroLesson, MaestroAssignment, MaestroUser
 from django.contrib.auth.decorators import login_required
-from .forms import CreateModelClass, UpdateUserForm, CreateUpdateLessonForm
+from .forms import CreateModelClass, UpdateUserForm, CreateUpdateLessonForm, CreateUpdateAssignmentForm, \
+    EnrollStudentsForm
 from django.utils.text import slugify
+from django.contrib import messages
+
 
 def index(request):
     classes_objects = MaestroClass.objects.all()
@@ -29,18 +32,93 @@ def play(request):
     return render(request, 'pages/play.html')
 
 
+@login_required
 def class_view(request, slug):
-    return render(request, template_name='pages/class.html', context={'class': get_object_or_404(MaestroClass, slug=slug)})
+    return render(request, template_name='pages/class.html',
+                  context={'class': get_object_or_404(MaestroClass, slug=slug)})
 
 
+@login_required
 def lesson_view(request, class_slug, lesson_slug):
-    return render(request, template_name='pages/lesson.html', context={'lesson': get_object_or_404(MaestroLesson,
-                                                                                                   slug=lesson_slug)})
+    lesson = get_object_or_404(MaestroLesson, slug=lesson_slug)
+    assignments = MaestroAssignment.objects.filter(lesson=lesson)  # Fetch assignments for this lesson
+    return render(request, 'pages/lesson.html', {'lesson': lesson, 'assignments': assignments})
+
+@login_required
+@admin_required
+@teacher_required
+def assignment_create_edit(request, class_slug, lesson_slug, assignment_slug=None):
+
+    assignment = None
+    lesson = None
+    maestro_class = None
+
+    if assignment_slug:
+        assignment = get_object_or_404(MaestroAssignment, slug=assignment_slug)
+        lesson = assignment.lesson
+        maestro_class = lesson.associated_class
+
+        if not (is_admin(request.user) or request.user in maestro_class.teachers.all()):
+            messages.error(request, "You do not have permission to edit this assignment.")
+            return redirect("find_classes")
+    else:
+        lesson = get_object_or_404(MaestroLesson, slug=lesson_slug)
+        maestro_class = lesson.associated_class
+
+        if not (is_admin(request.user) or request.user in maestro_class.teachers.all()):
+            messages.error(request, "You do not have permission to create an assignment.")
+            return redirect("find_classes")
+
+    if request.method == "POST":
+        form = CreateUpdateAssignmentForm(request.POST, request.FILES, instance=assignment)
+        if form.is_valid():
+            assignment = form.save(commit=False)
+
+            if not assignment_slug:
+                assignment.lesson = lesson
+
+            assignment.save()
+
+            for student in maestro_class.students.all():
+                if assignment not in student.assignments.all():
+                    student.assignments.add(assignment)
+
+            messages.success(request, "Assignment successfully saved and assigned to students.")
+
+            return redirect("assignment_view", class_slug=assignment.lesson.associated_class.slug,
+                            lesson_slug=lesson_slug, assignment_slug=assignment.slug)
+    else:
+        form = CreateUpdateAssignmentForm(instance=assignment)
+    return render(request, "pages/create_edit_assignment.html", {"form": form, "assignment": assignment, "lesson": lesson})
+
+
+def assignment_view(request, class_slug, lesson_slug, assignment_slug):
+    return render(request, template_name='pages/assignment.html',
+                  context={'assignment': get_object_or_404(MaestroAssignment,
+                                                           slug=assignment_slug)})
+
+
+@login_required
+@teacher_required
+@admin_required
+def remove_assignment(request, assignment_slug):
+    assignment = get_object_or_404(MaestroAssignment, slug=assignment_slug)
+    lesson = assignment.lesson
+
+    if not (is_admin(request.user) or request.user in lesson.associated_class.teachers.all()):
+        messages.error(request, "You do not have permission to remove this assignment.")
+        return redirect("assignment_detail", assignment_slug=assignment.slug)
+
+    # Delete the assignment
+    assignment.delete()
+    messages.success(request, f"Assignment '{assignment.title}' has been removed.")
+
+    return redirect("lesson_view", class_slug=lesson.associated_class.slug, lesson_slug=lesson.slug)
 
 
 @login_required
 @admin_required
-def class_edit(request, slug):
+def class_edit(request, slug=None):
     if slug:
         maestro_class = get_object_or_404(MaestroClass, slug=slug)
         if not (is_admin(request.user) or request.user in maestro_class.teachers.all()):
@@ -66,8 +144,8 @@ def class_edit(request, slug):
 
 
 @login_required
+@teacher_required
 def lesson_create_edit(request, class_slug, lesson_slug=None):
-
     maestro_class = get_object_or_404(MaestroClass, slug=class_slug)
 
     if lesson_slug:
@@ -98,6 +176,22 @@ def lesson_create_edit(request, class_slug, lesson_slug=None):
         "maestro_lesson": maestro_lesson,
         "maestro_class": maestro_class,  # ✅ Pass class info to the template
     })
+
+@login_required
+@teacher_required
+@admin_required
+def remove_lesson(request, class_slug, lesson_slug):
+    lesson = get_object_or_404(MaestroLesson, slug=lesson_slug)
+    maestro_class = lesson.associated_class
+
+    if not (is_admin(request.user) or request.user in maestro_class.teachers.all()):
+        messages.error(request, "You do not have permission to delete this lesson.")
+        return redirect("lesson_view", class_slug=class_slug, lesson_slug=lesson_slug)
+
+    lesson.delete()
+    messages.success(request, f"Lesson '{lesson.title}' has been deleted.")
+
+    return redirect("class_view", slug=class_slug)
 
 def logout_view(request):
     logout(request)
@@ -134,4 +228,49 @@ def update_user_profile(request):
 @login_required
 def notifications(request):
     return render(request, 'pages/notifications.html')
+
+
+@login_required
+@teacher_required
+@admin_required
+def enroll_students(request, class_slug):
+    maestro_class = get_object_or_404(MaestroClass, slug=class_slug)
+
+    if not (is_admin(request.user) or request.user in maestro_class.teachers.all()):
+        return redirect("find_classes")
+
+    if request.method == "POST":
+        form = EnrollStudentsForm(request.POST)
+        if form.is_valid():
+            student = form.cleaned_data["student"]
+            maestro_class.students.add(student)
+            student.instruments.add(maestro_class.instrument)
+            student.classes.add(maestro_class)
+            return redirect("class_view", slug=maestro_class.slug)
+    else:
+        form = EnrollStudentsForm()
+
+    return render(request, "pages/enroll_students.html", {"form": form, "maestro_class": maestro_class})
+
+
+@login_required
+@teacher_required
+@admin_required
+def remove_student(request, class_slug, student_username):
+    maestro_class = get_object_or_404(MaestroClass, slug=class_slug)
+    student = get_object_or_404(MaestroUser, username=student_username)
+
+    if not (is_admin(request.user) or request.user in maestro_class.teachers.all()):
+        messages.error(request, "You do not have permission to remove students.")
+        return redirect("class_view", slug=class_slug)
+
+    if student in maestro_class.students.all():
+        maestro_class.students.remove(student)
+        student.classes.remove(maestro_class)
+        messages.success(request, f"{student.username} has been removed from {maestro_class.title}.")
+    else:
+        messages.warning(request, "This student is not in the class.")
+
+    return redirect("class_view", slug=class_slug)
+
 

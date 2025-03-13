@@ -14,8 +14,36 @@
     <div class="actions">
         {% if user|is_admin or user|is_teacher %}
             <a href="{% url 'lesson_edit' lesson.associated_class.slug lesson.slug %}" class="btn btn-primary">Edit Lesson</a>
+
+            <!-- Delete Lesson Button -->
+            <form method="post" action="{% url 'remove_lesson' lesson.associated_class.slug lesson.slug %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete Lesson</button>
+            </form>
         {% endif %}
         <a href="{% url 'class_view' lesson.associated_class.slug %}" class="btn btn-secondary">Back to Class</a>
+    </div>
+
+    <!-- Assignments Section -->
+    <div class="assignments">
+        <h2>Assignments</h2>
+
+        {% if user|is_admin or user|is_teacher %}
+            <a href="{% url 'create_assignment' lesson.associated_class.slug lesson.slug %}" class="btn btn-success">Create Assignment</a>
+        {% endif %}
+
+        {% if assignments %}
+            <ul>
+                {% for assignment in assignments %}
+                    <li>
+                        <a href="{% url 'assignment_view' lesson.associated_class.slug lesson.slug assignment.slug %}">{{ assignment.title }}</a>
+                        - Due: {{ assignment.date_due|date:"D, d M Y H:i" }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No assignments available for this lesson.</p>
+        {% endif %}
     </div>
 </div>
 
@@ -35,10 +63,10 @@
         text-align: center;
         margin-bottom: 20px;
     }
-    h1 {
+    h1, h2 {
         color: #007bff;
     }
-    .actions {
+    .actions, .assignments {
         margin-top: 30px;
         text-align: center;
     }
@@ -47,6 +75,8 @@
         text-decoration: none;
         border-radius: 5px;
         font-weight: bold;
+        display: inline-block;
+        margin: 5px;
     }
     .btn-primary {
         background-color: #007bff;
@@ -55,6 +85,18 @@
     .btn-secondary {
         background-color: #6c757d;
         color: white;
+    }
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 14px;
+        cursor: pointer;
     }
 </style>
 {% endblock %}

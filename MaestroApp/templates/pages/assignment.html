@@ -1,4 +1,25 @@
 {% extends 'components/layouts/base.html' %}
+{% load user_tags %}
 
+{% block content %}
+<h2>{{ assignment.title }}</h2>
+<p>{{ assignment.text }}</p>
+<p><strong>Due Date:</strong> {{ assignment.date_due }}</p>
+<p><strong>Lesson:</strong> {{ assignment.lesson }}</p>
 
+{% if assignment.attachment %}
+<p><strong>Attachment:</strong> <a href="{{ assignment.attachment.url }}" download>Download File</a></p>
+{% endif %}
 
+{% if user|is_admin or user in assignment.lesson.associated_class.teachers.all %}
+    <a href="{% url 'assignment_edit' assignment.lesson.associated_class.slug assignment.lesson.slug assignment.slug %}" class="btn btn-primary">Edit Assignment</a>
+
+    <form method="post" action="{% url 'remove_assignment' assignment.slug %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Remove Assignment</button>
+    </form>
+{% endif %}
+
+<a href="{% url 'lesson_view' assignment.lesson.associated_class.slug assignment.lesson.slug %}" class="btn btn-secondary">Back to Lesson</a>
+
+{% endblock %}

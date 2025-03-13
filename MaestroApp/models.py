@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Permission, Group
 from django.utils.text import slugify
@@ -30,6 +32,11 @@ class MaestroClass(models.Model):
     teachers = models.ManyToManyField(
         "MaestroUser",
         related_name="teaching_classes",
+        blank=True
+    )
+    students = models.ManyToManyField(
+        "MaestroUser",
+        related_name="enrolled_classes",
         blank=True
     )
     is_group = models.BooleanField(default=0)
@@ -72,10 +79,13 @@ class MaestroAssignment(models.Model):
     date_due = models.DateTimeField()
     lesson = models.ForeignKey(MaestroLesson, on_delete=models.CASCADE)
     slug = models.SlugField(unique=True, blank=True)  # Slug field
+    attachment = models.FileField(upload_to="assignments/", blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
+            while MaestroAssignment.objects.filter(slug=self.slug).exists():
+                self.slug = f"{slugify(self.title)}-{uuid.uuid4().hex[:6]}"
         super().save(*args, **kwargs)
 
     def __str__(self):
