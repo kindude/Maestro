@@ -98,10 +98,19 @@ class MaestroUser(AbstractUser):
     classes = models.ManyToManyField(MaestroClass, related_name="users", blank=True)
     assignments = models.ManyToManyField(MaestroAssignment, related_name="users", blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            super().save(*args, **kwargs)
+
+            default_group, created = Group.objects.get_or_create(name="Student")
+            self.groups.add(default_group)
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
         full_name = f"{self.first_name} {self.last_name}".strip()
         return full_name if full_name else self.username
 
     class Meta:
-        verbose_name = "MaestroUser"
-        verbose_name_plural = "MaestroUsers"
+        verbose_name = "Maestro User"
+        verbose_name_plural = "Maestro Users"

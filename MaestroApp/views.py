@@ -48,7 +48,6 @@ def lesson_view(request, class_slug, lesson_slug):
 @admin_required
 @teacher_required
 def assignment_create_edit(request, class_slug, lesson_slug, assignment_slug=None):
-
     assignment = None
     lesson = None
     maestro_class = None
@@ -163,9 +162,9 @@ def lesson_create_edit(request, class_slug, lesson_slug=None):
         form = CreateUpdateLessonForm(request.POST, instance=maestro_lesson)
         if form.is_valid():
             maestro_lesson = form.save(commit=False)
-            maestro_lesson.associated_class = maestro_class  # ✅ Associate the lesson with the class
+            maestro_lesson.associated_class = maestro_class
             if not maestro_lesson.slug:
-                maestro_lesson.slug = slugify(maestro_lesson.title)  # ✅ Ensure slug is set
+                maestro_lesson.slug = slugify(maestro_lesson.title)
             maestro_lesson.save()
             return redirect("lesson_view", class_slug=maestro_class.slug, lesson_slug=maestro_lesson.slug)
     else:
@@ -174,7 +173,7 @@ def lesson_create_edit(request, class_slug, lesson_slug=None):
     return render(request, "pages/create_edit_lesson.html", {
         "form": form,
         "maestro_lesson": maestro_lesson,
-        "maestro_class": maestro_class,  # ✅ Pass class info to the template
+        "maestro_class": maestro_class
     })
 
 @login_required
@@ -192,6 +191,7 @@ def remove_lesson(request, class_slug, lesson_slug):
     messages.success(request, f"Lesson '{lesson.title}' has been deleted.")
 
     return redirect("class_view", slug=class_slug)
+
 
 def logout_view(request):
     logout(request)
