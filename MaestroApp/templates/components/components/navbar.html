@@ -5,6 +5,18 @@
     <div class="container-fluid">
         <div class="navbar-logo">
            {% block currentpage_block %} <a href="{% url 'home' %}">MAESTRO.</a> {% endblock %}
+           
         </div>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+            <li class = "nav-right-elements"> <a href = "{% url 'update_user_profile' %}"> Hello, {{ user.first_name }} </a> </li>
+
+            {% else %}
+            <li class = "nav-right-elements"> <a href = "{% url 'register' %}"> Sign Up </a> </li>
+
+            <li class = "nav-right-elements"><a href="{% url 'login' %}">Login</a></li>
+          
+            {% endif %}
+           </ul>
     </div>
 </nav>
