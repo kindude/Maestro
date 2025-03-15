@@ -99,7 +99,6 @@ class MaestroUser(AbstractUser):
     instruments = models.ManyToManyField(MaestroInstrument, related_name="users", blank=True)
     classes = models.ManyToManyField(MaestroClass, related_name="users", blank=True)
     assignments = models.ManyToManyField(MaestroAssignment, related_name="users", blank=True)
-    notifications = models.ManyToManyField("MaestroNotification", related_name="recipients", blank=True)
 
     def save(self, *args, **kwargs):
         is_new = self.pk is None
@@ -126,10 +125,8 @@ class MaestroNotification(models.Model):
         ("assignment_added", "New Assignment Added"),
     ]
 
-    users = models.ManyToManyField("MaestroUser", related_name="received_notifications")
     title = models.CharField(max_length=150)
     message = models.TextField()
-    is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=now)
     notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
 
@@ -140,6 +137,16 @@ class MaestroNotification(models.Model):
     def __str__(self):
         return f"[{self.notification_type}] {self.title}"
 
-    def mark_as_read(self, user):
-        self.users.remove(user)
 
+class UserNotificationStatus(models.Model):
+    user = models.ForeignKey(MaestroUser, on_delete=models.CASCADE)
+    notification = models.ForeignKey(MaestroNotification, on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ("user", "notification")
+        verbose_name = "Maestro User Notification Status"
+        verbose_name_plural = "Maestro User Notification Statuses"
+
+    def __str__(self):
+        return f"{self.user.username} - {self.notification.title} ({'Read' if self.is_read else 'Unread'})"

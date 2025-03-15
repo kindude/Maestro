@@ -1,7 +1,8 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect, get_object_or_404
 from .decorators import student_required, teacher_required, admin_required, is_admin
-from .models import MaestroClass, MaestroLesson, MaestroAssignment, MaestroUser, MaestroNotification
+from .models import MaestroClass, MaestroLesson, MaestroAssignment, MaestroUser, MaestroNotification, \
+    UserNotificationStatus
 from django.contrib.auth.decorators import login_required
 from .forms import CreateModelClass, UpdateUserForm, CreateUpdateLessonForm, CreateUpdateAssignmentForm, \
     EnrollStudentsForm
@@ -246,9 +247,13 @@ def update_user_profile(request):
 
 @login_required
 def notifications(request):
-    notifications_ = MaestroUser.objects.get(id=request.user.id).notifications.all()
+    user_notifications = UserNotificationStatus.objects.filter(user=request.user).select_related("notification")
 
-    return render(request, 'pages/notifications.html', context={"notifications": notifications_})
+    return render(
+        request,
+        "pages/notifications.html",
+        context={"notifications": user_notifications}
+    )
 
 
 @login_required
@@ -317,11 +322,12 @@ def remove_student(request, class_slug, student_username):
 def mark_as_read(request, notification_id):
     if request.method == "POST":
         try:
-            user = MaestroUser.objects.get(id=request.user.id)
-            notification = MaestroNotification.objects.get(id=notification_id)
-            user.notifications.remove(notification)
-            return JsonResponse({"message": "Notification marked as read"}, status=200)
-        except MaestroNotification.DoesNotExist:
+            user_notification = UserNotificationStatus.objects.get(user=request.user, id=notification_id)
+            user_notification.is_read = True
+            user_notification.save()
+
+            return JsonResponse({"success": True, "message": "Notification marked as read"}, status=200)
+        except UserNotificationStatus.DoesNotExist:
             return JsonResponse({"error": "Notification not found"}, status=404)
 
     return JsonResponse({"error": "Invalid request"}, status=400)

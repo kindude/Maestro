@@ -1,5 +1,6 @@
-from .models import MaestroNotification, MaestroUser
 from django.contrib.contenttypes.models import ContentType
+
+from MaestroApp.models import UserNotificationStatus, MaestroNotification, MaestroUser
 
 
 def create_notification(users, title, message, notification_type, related_object=None):
@@ -15,9 +16,8 @@ def create_notification(users, title, message, notification_type, related_object
     if related_object:
         notification.content_type = ContentType.objects.get_for_model(related_object)
         notification.object_id = related_object.id
+        notification.save()
 
-    notification.users.set(users)
-
+    # Create UserNotificationStatus entries instead of direct ManyToMany relation
     for user in users:
-        user.notifications.add(notification)
-        user.save()
+        UserNotificationStatus.objects.create(user=user, notification=notification, is_read=False)
