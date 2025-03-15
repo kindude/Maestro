@@ -102,13 +102,12 @@ class MaestroUser(AbstractUser):
     notifications = models.ManyToManyField("MaestroNotification", related_name="recipients", blank=True)
 
     def save(self, *args, **kwargs):
-        if self.pk is None:
-            super().save(*args, **kwargs)
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
 
+        if is_new:
             default_group, created = Group.objects.get_or_create(name="Student")
             self.groups.add(default_group)
-
-        super().save(*args, **kwargs)
 
     def __str__(self):
         full_name = f"{self.first_name} {self.last_name}".strip()
