@@ -14,6 +14,7 @@ body {
     width: 800px;
     padding: 20px;
     border-radius: 8px;
+    margin-left: 100;
 }
 
 .logo {
@@ -90,7 +91,7 @@ label {
 
 input {
     width: 105%; 
-    max-width: 250px; 
+    max-width: 210px; 
     height: 20px; 
     padding: 8px; 
     border: 1px solid #ccc; 
@@ -275,24 +276,25 @@ input {
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 5px;
-    padding: 8px 12px;
-    width: 220px;
+    padding: 7px 8px; 
+    width: 150px; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     text-decoration: none;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 13px; 
     color: #444;
     transition: all 0.3s ease-in-out;
+    position: relative; 
+    left: 60px; 
 }
 
 .google-btn img {
-    width: 20px; /* Adjust the width */
-    height: 20px; /* Adjust the height */
-    margin-right: 8px; /* Adds some spacing between the text and the icon */
+    width: 18px; 
+    height: 18px; 
+    margin-right: 6px; 
 }
 
 .google-btn:hover {
     background-color: #f8f8f8;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
-
