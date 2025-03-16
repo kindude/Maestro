@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils.timezone import now
 from .models import MaestroInstrument, MaestroClass, MaestroLesson, MaestroAssignment, MaestroUser, \
-    MaestroNotification
+    MaestroNotification, UserNotificationStatus
 
 
 class MaestroModelTests(TestCase):
@@ -23,7 +23,7 @@ class MaestroModelTests(TestCase):
 
         self.class_instance.students.add(self.user)
         self.user.assignments.add(self.assignment)
-        self.notification.users.add(self.user)
+        UserNotificationStatus.objects.create(user=self.user, notification=self.notification, is_read=False)
 
     def test_maestro_instrument_creation(self):
         self.assertEqual(str(self.instrument), 'Violin')
@@ -48,13 +48,17 @@ class MaestroModelTests(TestCase):
 
     def test_maestro_notification_creation(self):
         self.assertEqual(str(self.notification), '[class_added] New Class Added')
-        self.assertTrue(self.notification.users.filter(id=self.user.id).exists())
+        self.assertTrue(UserNotificationStatus.objects.filter(user=self.user, notification=self.notification).exists())
 
     def test_maestro_slug_generation(self):
         self.assertEqual(self.class_instance.slug, 'violin-masterclass')
         self.assertEqual(self.lesson.slug, 'violin-basics')
-        self.assertEqual(self.assignment.slug.startswith('practice-scales'), True)
+        self.assertTrue(self.assignment.slug.startswith('practice-scales'))
 
     def test_mark_notification_as_read(self):
-        self.notification.mark_as_read(self.user)
-        self.assertFalse(self.notification.users.filter(id=self.user.id).exists())
+        user_notification = UserNotificationStatus.objects.get(user=self.user, notification=self.notification)
+        user_notification.is_read = True
+        user_notification.save()
+
+        updated_notification = UserNotificationStatus.objects.get(user=self.user, notification=self.notification)
+        self.assertTrue(updated_notification.is_read)
