@@ -11,6 +11,12 @@ h1 {
 
 li {
     list-style: none;
+    
+}
+
+.sidebar-item{
+    margin-bottom: 5mm;
+    margin-left: -3mm;
 }
 
 
@@ -38,6 +44,7 @@ a {
     background-position-x: -20mm;
     background-position-y: -10mm;
     background-size: 140%;
+    
 }
 
 #sidebar.collapsed {
@@ -97,6 +104,8 @@ a {
     color: #FFF;
     font-size: .75rem;
     padding: 1.5rem 1.5rem .375rem;
+    margin-bottom: 5mm;
+    margin-left: -3mm;
 }
 
 a.sidebar-link {
