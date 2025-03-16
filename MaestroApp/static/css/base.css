@@ -74,6 +74,11 @@ a {
     font-weight: 800;
     font-family: Georgia, serif;
     font-weight: 80;
+    background-image: url("note3.png");
+    background-size: 80%;
+    background-position-y: -30mm;
+    background-position-x: 80mm;
+   
 }
 .navbar-logo {
     margin-left:10px;
