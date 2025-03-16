@@ -34,6 +34,10 @@ a {
     background-color: #20451f;
     display: flex;
     flex-direction: column;
+    background-image: url("note2.png");
+    background-position-x: -20mm;
+    background-position-y: -10mm;
+    background-size: 140%;
 }
 
 #sidebar.collapsed {
@@ -133,6 +137,7 @@ a.sidebar-link:hover {
 
     .sidebar-toggle {
         margin-left: -264px;
+        
     }
 
     #sidebar.collapsed {
