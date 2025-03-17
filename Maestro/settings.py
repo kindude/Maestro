@@ -27,6 +27,12 @@ DEBUG = False
 CSRF_TRUSTED_ORIGINS = [
     "https://maestro-production-423a.up.railway.app",
 ]
+
+if DEBUG:
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+
+
 ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = 'login'
