@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-72#2%mfv-@4(83%3_x0&0^96$e$uh*irg&#m$3%n!l9=o)_oid'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 CSRF_TRUSTED_ORIGINS = [
     "https://maestro-production-423a.up.railway.app",
 ]
@@ -177,12 +177,16 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': ['profile', 'email'],
-
-        'AUTH_PARAMS': {'access_type': 'online'},
+    "google": {
+        "APP": {
+            "client_id": "734597333911-0dqdn8so8jhpddtg8b9114ihlc5ufcob.apps.googleusercontent.com",
+            "secret": "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",
+        },
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {"access_type": "online"},
     }
 }
+
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 SOCIALACCOUNT_ADAPTER = 'MaestroApp.adapters.MySocialAccountAdapter'
