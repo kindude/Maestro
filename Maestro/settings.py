@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-72#2%mfv-@4(83%3_x0&0^96$e$uh*irg&#m$3%n!l9=o)_oid'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -182,3 +182,5 @@ SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
