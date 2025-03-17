@@ -26,12 +26,12 @@ RUN python manage.py shell -c \
     if not User.objects.filter(username='admin').exists(): \
         User.objects.create_superuser('admin', 'admin@example.com', 'admin123')"
 
-# **NEW: Fix SocialApp issue & Start Gunicorn**
-CMD sh -c "
-    python manage.py shell -c '
-from allauth.socialaccount.models import SocialApp;
-apps = SocialApp.objects.filter(provider=\"google\");
-for app in apps:
-    print(f\"ID: {app.id}, Name: {app.name}, Sites: {app.sites.all()}\");
-' && gunicorn Maestro.wsgi:application --bind 0.0.0.0:8000
-"
+# **NEW: Fix SocialApp issue BEFORE running Gunicorn**
+RUN python manage.py shell -c \
+    "from allauth.socialaccount.models import SocialApp; \
+    apps = SocialApp.objects.filter(provider='google'); \
+    for app in apps: \
+        print(f'ID: {app.id}, Name: {app.name}, Sites: {app.sites.all()}');"
+
+# Start Gunicorn server
+CMD ["gunicorn", "Maestro.wsgi:application", "--bind", "0.0.0.0:8000"]
