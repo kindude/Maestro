@@ -1,0 +1,66 @@
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed;
+        top: 0;
+        width: 100vw;  
+        height: 100vh; 
+        background-color: #2d482f; 
+        transition: left 0.3s ease-in-out;
+        z-index: 1000;
+    }
+
+    #sidebar.collapsed {
+        max-width: 100%;
+    }
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+    }
+
+    .overlay.show {
+        display: block;
+    }
+
+    .auth-container {
+        display: flex !important;
+        flex-direction: column !important;
+        margin: auto !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+    
+    
+    .background{
+        margin: 0;
+    }
+    
+    label{
+        width: 100%;
+    }
+    
+
+    .logo {
+        background-color:#6f8b6b;
+        color:white;
+        width: 200px;
+        height: 200px;
+        line-height: 200px;
+        font-size: 20px;
+        font-weight: bold;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: -20px;
+        overflow: hidden;
+    }
+
+    
+}

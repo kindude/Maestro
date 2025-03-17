@@ -87,7 +87,7 @@
             </ul>
 
             <div class="text-center mt-4">
-                <a href="{% url 'update_user_profile' %}" class="btn btn-primary">Edit Details</a>
+                <a href="{% url 'update_user_profile' %}" class="btn btn-primary w-100">Edit Details</a>
 
                 {% if user|is_admin and user.is_authenticated %}
                     <a href="{% url 'create_class' %}" class="btn btn-secondary">Create a Class</a>
