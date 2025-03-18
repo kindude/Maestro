@@ -1,9 +1,16 @@
 import os
+import django
+
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Maestro.settings")
+django.setup()
+
 from django.contrib.sites.models import Site
 from allauth.socialaccount.models import SocialApp
 
 
 site_id = 1
+
 
 site = Site.objects.get(id=site_id)
 site.domain = "maestro-production-423a.up.railway.app"
