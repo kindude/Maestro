@@ -28,5 +28,8 @@ RUN echo "from django.contrib.auth import get_user_model; \
 COPY check_social_app.py /app/
 RUN echo "🔎 Checking SocialApp..." && python check_social_app.py | tee /dev/stderr
 
+COPY create_social_app.py /app/
+RUN echo "Creating SocialApp..." && python create_social_app.py | tee /dev/stderr
+
 
 CMD ["gunicorn", "Maestro.wsgi:application", "--bind", "0.0.0.0:8000"]
