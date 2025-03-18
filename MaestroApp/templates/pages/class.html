@@ -34,7 +34,7 @@
             {% endfor %}
         </ul>
 
-        {% if user|is_admin %}
+        {% if user|is_admin or user|is_teacher  %}
             <a href="{% url 'lesson_create' class.slug %}" class="btn btn-success">➕ Create Lesson</a>
         {% endif %}
     </div>
@@ -60,7 +60,7 @@
     </div>
 
     <div class="actions">
-        {% if user|is_admin %}
+        {% if user|is_admin or user|is_teacher %}
             <a href="{% url 'class_edit' class.slug %}" class="btn btn-primary">Edit Class</a>
         {% endif %}
         <a href="{% url 'find_classes' %}" class="btn btn-secondary">Back to Classes</a>
