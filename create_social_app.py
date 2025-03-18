@@ -24,7 +24,7 @@ social_app, created = SocialApp.objects.get_or_create(
     name="MaestroApp",
     defaults={
         "client_id": os.getenv("CLIENT_ID"),
-        "secret": os.getenv("SECRET_KEY"),
+        "secret": os.getenv("CLIENT_SECRET"),
     }
 )
 

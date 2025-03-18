@@ -202,3 +202,7 @@ ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+
+CLIENT_ID = os.getenv("CLIENT_ID")
+SECRET_KEY = os.getenv("CLIENT_SECRET")
