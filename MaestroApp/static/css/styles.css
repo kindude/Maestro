@@ -5,6 +5,15 @@ body {
     justify-content: center;
     height: 100vh;
     margin: 0;
+    background-image: url("note.png"), url("note2.png");
+    background-repeat: no-repeat;
+    background-position:right, left;
+    background-size: 60%, 44%;
+    background-position-y: -300%, 100%;
+    background-position-x: 110%, 5%;
+    background-blend-mode: overlay;
+   
+   
 }
 
 .container {
@@ -14,13 +23,14 @@ body {
     width: 800px;
     padding: 20px;
     border-radius: 8px;
+    
 }
 
 .logo {
     background-color:#6f8b6b;
     color:white;
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
     line-height: 200px;
     font-size: 20px;
     font-weight: bold;
@@ -32,10 +42,35 @@ body {
     overflow: hidden;
 }
 
+.circle {
+    display: inline-block;
+    border-radius: 50%;
+    min-width: 400px;
+    min-height: 400px;
+    padding: 5px;
+    background: #6f8b6b;
+    color: white;
+    text-align: center;
+    line-height: 1;
+    justify-content: center;
+    box-sizing: content-box;
+    white-space: nowrap;
+    align-items: center;
+    display: flex;
+  }
+
+.circle span {
+font-family: Georgia, serif;
+font-size: 450%;
+display: inline-block;
+vertical-align: middle;
+}
+
 
 .logo span {
     position: relative;
     z-index: 1;
+    
 }
 
 .form-container {
