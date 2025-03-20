@@ -11,6 +11,10 @@ def register_view(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+
+            login(request, user, backend=user.backend)
+
             login(request, user)
             messages.success(request, "Registration successful!")
             return redirect('dashboard')
