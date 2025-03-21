@@ -99,7 +99,7 @@ class UpdateUserForm(forms.ModelForm):
 class CreateUpdateLessonForm(forms.ModelForm):
     title = forms.CharField(required=False, max_length=200)
     duration = forms.IntegerField()
-    is_group = forms.BooleanField()
+    is_group = forms.BooleanField(required=False)
     price = forms.DecimalField(decimal_places=3, max_digits=7)
     dt = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
 
