@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-72#2%mfv-@4(83%3_x0&0^96$e$uh*irg&#m$3%n!l9=o)_oid
 DEBUG = False
 
 
+
 if DEBUG:
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
