@@ -9,14 +9,15 @@
     {% load static %}
     <link rel="icon" href="{% static 'img/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mobile.css' %}">
     <script src="{% static 'js/removeErrors.js' %}"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="circle">
+    <div class="container auth-container"> <!-- اینجا کلاس `auth-container` رو اضافه کردیم -->
+        <div class="logo">
             <span>Maestro.</span>
         </div>
-        <div class="form-container">
+        <div class="form-container background"> <!-- کلاس background برای سازگاری بهتر -->
             <div class="tabs">
                 <a href="{% url 'login' %}" class="tab">Sign in</a> 
                 <a href="{% url 'register' %}" class="tab active">Sign up</a>
@@ -50,6 +51,7 @@
                 <button type="submit" class="enter-btn">Sign up</button>
                 <div class="google-login">
                     <a href="{% provider_login_url 'google' %}" class="google-btn">
+                        <img src="{% static 'img/google.png' %}" alt="Google Logo" class="google-logo">
                         <span>Sign up with Google</span>
                     </a>
                 </div>
