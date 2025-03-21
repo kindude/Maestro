@@ -41,7 +41,7 @@
             <ul class="list-group">
                 {% for class in user.teaching_classes.all %}
                     <li class="list-group-item">
-                        <a href="{% url 'class_view' class.slug %}">{{ class.title }}</a>
+                        <a href="{% url 'class_view' class.slug %}" class="text-dark">{{ class.title }}</a>
 
                         {% if user|is_admin or user in class.teachers.all %}
                             <a href="{% url 'enroll_students' class.slug %}" class="btn btn-success btn-sm float-end">
@@ -61,7 +61,7 @@
             <ul class="list-group">
                 {% for class in user.classes.all %}
                     <li class="list-group-item">
-                        <a href="{% url 'class_view' class.slug %}">{{ class.title }}</a>
+                        <a href="{% url 'class_view' class.slug %}" class="text-dark">{{ class.title }}</a>
                     </li>
                 {% empty %}
                     <li class="list-group-item text-muted">No enrolled classes.</li>
@@ -74,7 +74,7 @@
             <ul class="list-group">
                 {% for assignment in user.assignments.all %}
                     <li class="list-group-item">
-                        <a href="{% url 'assignment_view' class_slug=assignment.lesson.associated_class.slug lesson_slug=assignment.lesson.slug assignment_slug=assignment.slug %}">
+                        <a href="{% url 'assignment_view' class_slug=assignment.lesson.associated_class.slug lesson_slug=assignment.lesson.slug assignment_slug=assignment.slug %}" class="text-dark">
                             {{ assignment.title }}
                         </a>
                         <span class="badge bg-warning text-dark">Due: {{ assignment.date_due|date:"D, d M Y" }}</span>

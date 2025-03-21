@@ -8,7 +8,7 @@
            name="search"
            value="{{ request.GET.search|default:'' }}">  <!-- Keeps search input -->
 
-    <button class="btn btn-outline-secondary" type="submit">Search</button>
+    <button class="btn btn-outline-secondary mr-2" type="submit">Search</button>
     {% if user|is_admin %}
     <a href="{% url 'create_class' %}" class="btn btn-outline-secondary">Create New</a>
     {% endif %}

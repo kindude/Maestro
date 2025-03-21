@@ -329,3 +329,13 @@ input {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
+.non-field-errors {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    max-width: 80%;
+    margin: 10px auto;
+    padding: 5px;
+    background: rgba(255, 0, 0, 0.1);
+    border-radius: 5px;
+}

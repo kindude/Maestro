@@ -11,34 +11,57 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/mobile.css' %}">
     <script src="{% static 'js/removeErrors.js' %}"></script>
+    <style>
+        /* Ensure error messages are properly formatted */
+        .non-field-errors {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            max-width: 80%;  /* Restrict width */
+            margin: 10px auto;
+            padding: 5px;
+            background: rgba(255, 0, 0, 0.1); /* Light red background */
+            border-radius: 5px;
+            font-size: 14px; /* Adjust font size */
+            line-height: 1.3;
+            word-wrap: break-word;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="container auth-container ">
+    <div class="container auth-container">
         <div class="logo">
             <span>Maestro.</span>
         </div>
         <div class="form-container background">
             <div class="tabs">
-                <a href="{% url 'login' %}" class="tab active">Sign in</a> 
+                <a href="{% url 'login' %}" class="tab active">Sign in</a>
                 <a href="{% url 'register' %}" class="tab">Sign up</a>
             </div>
+
+            <!-- Display Non-Field Errors at the Top, so they don't interfere with inputs -->
+
             <form method="POST">
                 {% csrf_token %}
 
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
 
-                <div class="form-group">
-                    <label for="id_username">Username:</label>
-                    <input type="text" name="username" id="id_username">
-                </div>
-
-                <div class="form-group">
-                    <label for="id_password">Password:</label>
-                    <input type="password" name="password" id="id_password">
-                    <a href="#" class="forgot-password">Forgot password?</a>
-                </div>
+                        {% if field.errors %}
+                            <ul class="errorlist" style="color: red; padding-left: 0; list-style: none; margin: 5px 0 0 0;">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
 
                 <button type="submit" class="enter-btn">Sign in</button>
+
                 <div class="google-login">
                     <a href="{% provider_login_url 'google' %}" class="google-btn">
                         <img src="{% static 'img/google.png' %}" alt="Google Logo" class="google-logo">
@@ -46,7 +69,18 @@
                     </a>
                 </div>
             </form>
+
+
+
         </div>
+
+        {% if form.non_field_errors %}
+            <div class="non-field-errors">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>
