@@ -11,4 +11,4 @@ if apps.exists():
     for app in apps:
         print(f'✅ ID: {app.id}, Name: {app.name}, Sites: {list(app.sites.values_list("domain", flat=True))}')
 else:
-    print("⚠️ No Google SocialApp found.")
+    print("No Google SocialApp found.")
