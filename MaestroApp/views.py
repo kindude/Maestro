@@ -262,7 +262,12 @@ def update_user_profile(request):
 
 @login_required
 def notifications(request):
-    user_notifications = UserNotificationStatus.objects.filter(user=request.user).select_related("notification")
+    user_notifications = (
+        UserNotificationStatus.objects
+        .filter(user=request.user)
+        .select_related("notification")
+        .order_by("notification__created_at")
+    )
 
     return render(
         request,
