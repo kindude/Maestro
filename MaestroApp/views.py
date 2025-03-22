@@ -30,9 +30,24 @@ def about(request):
 def about(request):
     return render(request, 'pages/about.html')
 
-
+@login_required
 def play(request):
-    return render(request, 'pages/play.html')
+    key_note_map = {
+        # Lower octave (C3–B3)
+        'z': 'C3', 's': 'C#3', 'x': 'D3', 'd': 'D#3', 'c': 'E3',
+        'v': 'F3', 'g': 'F#3', 'b': 'G3', 'h': 'G#3', 'n': 'A3', 'j': 'A#3', 'm': 'B3',
+
+        # Mid octave (C4–B4)
+        'q': 'C4', '2': 'C#4', 'w': 'D4', '3': 'D#4', 'e': 'E4',
+        'r': 'F4', '5': 'F#4', 't': 'G4', '6': 'G#4', 'y': 'A4', '7': 'A#4', 'u': 'B4',
+
+        # Upper octave (C5–E5)
+        'i': 'C5', '9': 'C#5', 'o': 'D5', '0': 'D#5', 'p': 'E5'
+    }
+
+    return render(request, 'pages/play.html', {
+        'key_note_map': key_note_map
+    })
 
 
 @login_required
@@ -247,7 +262,12 @@ def update_user_profile(request):
 
 @login_required
 def notifications(request):
-    user_notifications = UserNotificationStatus.objects.filter(user=request.user).select_related("notification")
+    user_notifications = (
+        UserNotificationStatus.objects
+        .filter(user=request.user)
+        .select_related("notification")
+        .order_by("notification__created_at")
+    )
 
     return render(
         request,
