@@ -77,9 +77,9 @@
                         <a href="{% url 'assignment_view' class_slug=assignment.lesson.associated_class.slug lesson_slug=assignment.lesson.slug assignment_slug=assignment.slug %}" class="text-dark">
                             {{ assignment.title }}
                         </a>
-                        <span class="badge bg-warning text-dark">Due: {{ assignment.date_due|date:"D, d M Y" }}</span>
+                        <span class="badge bg-success text-dark">Due: {{ assignment.date_due|date:"D, d M Y" }}</span>
                         <br>
-                        <small>Lesson: <a href="{% url 'lesson_view' class_slug=assignment.lesson.associated_class.slug lesson_slug=assignment.lesson.slug %}">{{ assignment.lesson }}</a></small>
+                        <small>Lesson: <a href="{% url 'lesson_view' class_slug=assignment.lesson.associated_class.slug lesson_slug=assignment.lesson.slug %}" class="text-dark">{{ assignment.lesson }}</a></small>
                     </li>
                 {% empty %}
                     <li class="list-group-item text-muted">No assignments assigned.</li>
