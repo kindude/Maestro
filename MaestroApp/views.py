@@ -63,7 +63,6 @@ def lesson_view(request, class_slug, lesson_slug):
     return render(request, 'pages/lesson.html', {'lesson': lesson, 'assignments': assignments})
 
 @login_required
-@admin_required
 @teacher_required
 def assignment_create_edit(request, class_slug, lesson_slug, assignment_slug=None):
     assignment = None
@@ -124,7 +123,6 @@ def assignment_view(request, class_slug, lesson_slug, assignment_slug):
 
 @login_required
 @teacher_required
-@admin_required
 def remove_assignment(request, assignment_slug):
     assignment = get_object_or_404(MaestroAssignment, slug=assignment_slug)
     lesson = assignment.lesson
@@ -213,7 +211,6 @@ def lesson_create_edit(request, class_slug, lesson_slug=None):
 
 @login_required
 @teacher_required
-@admin_required
 def remove_lesson(request, class_slug, lesson_slug):
     lesson = get_object_or_404(MaestroLesson, slug=lesson_slug)
     maestro_class = lesson.associated_class
@@ -278,7 +275,6 @@ def notifications(request):
 
 @login_required
 @teacher_required
-@admin_required
 def enroll_students(request, class_slug):
     maestro_class = get_object_or_404(MaestroClass, slug=class_slug)
 
@@ -310,7 +306,6 @@ def enroll_students(request, class_slug):
 
 @login_required
 @teacher_required
-@admin_required
 def remove_student(request, class_slug, student_username):
     maestro_class = get_object_or_404(MaestroClass, slug=class_slug)
     student = get_object_or_404(MaestroUser, username=student_username)
