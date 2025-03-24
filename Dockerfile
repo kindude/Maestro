@@ -24,7 +24,7 @@ RUN echo "from django.contrib.auth import get_user_model; \
     User.objects.create_superuser('admin', 'admin@example.com', 'admin123')" \
     | python manage.py shell
 
-
+COPY assignments /app/
 COPY check_social_app.py /app/
 RUN echo "🔎 Checking SocialApp..." && python check_social_app.py | tee /dev/stderr
 
