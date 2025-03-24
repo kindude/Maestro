@@ -9,7 +9,7 @@
         <p><strong>Type:</strong> {% if lesson.is_group %} Group Lesson {% else %} One-on-One {% endif %}</p>
         <p><strong>Price:</strong> £{{ lesson.price }}</p>
         <p><strong>Date & Time:</strong> {{ lesson.dt|date:"D, d M Y H:i" }}</p>
-        <p><strong>Class:</strong> <a href="{% url 'class_view' lesson.associated_class.slug %}">{{ lesson.associated_class.title }}</a></p>
+        <p><strong>Class:</strong> <a href="{% url 'class_view' lesson.associated_class.slug %}" class="text-dark">{{ lesson.associated_class.title }}</a></p>
     </div>
 
     <div class="actions">

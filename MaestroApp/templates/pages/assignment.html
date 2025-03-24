@@ -9,7 +9,7 @@
 <p><strong>Lesson:</strong> {{ assignment.lesson }}</p>
 
 {% if assignment.attachment %}
-<p><strong>Attachment:</strong> <a href="{{ assignment.attachment.url }}" download>Download File</a></p>
+<p><strong>Attachment:</strong> <a href="{{ assignment.attachment.url }}" class="text-dark" download>Download File</a></p>
 {% endif %}
 
 {% if user|is_admin or user in assignment.lesson.associated_class.teachers.all %}
