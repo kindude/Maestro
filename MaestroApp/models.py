@@ -81,7 +81,7 @@ class MaestroAssignment(models.Model):
     date_due = models.DateTimeField()
     lesson = models.ForeignKey(MaestroLesson, on_delete=models.CASCADE)
     slug = models.SlugField(unique=True, blank=True)  # Slug field
-    attachment = models.FileField(upload_to="assignments/", blank=True, null=True)
+    attachment = models.FileField(upload_to="media/assignments/", blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
