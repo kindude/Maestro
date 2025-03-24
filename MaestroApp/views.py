@@ -1,6 +1,6 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect, get_object_or_404
-from .decorators import student_required, teacher_required, admin_required, is_admin
+from .decorators import student_required, teacher_required, admin_required, is_admin, is_teacher
 from .models import MaestroClass, MaestroLesson, MaestroAssignment, MaestroUser, MaestroNotification, \
     UserNotificationStatus
 from django.contrib.auth.decorators import login_required
@@ -173,7 +173,7 @@ def lesson_create_edit(request, class_slug, lesson_slug=None):
             return redirect("find_classes")
     else:
         # Creating a new lesson
-        if not is_admin(request.user):
+        if not (is_admin(request.user) or request.user in maestro_class.teachers.all()):
             return redirect("find_classes")
 
         maestro_lesson = None
