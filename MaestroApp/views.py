@@ -62,7 +62,7 @@ def lesson_view(request, class_slug, lesson_slug):
     assignments = MaestroAssignment.objects.filter(lesson=lesson)  # Fetch assignments for this lesson
     return render(request, 'pages/lesson.html', {'lesson': lesson, 'assignments': assignments})
 
-@login_required
+
 @teacher_required
 def assignment_create_edit(request, class_slug, lesson_slug, assignment_slug=None):
     assignment = None
@@ -121,7 +121,6 @@ def assignment_view(request, class_slug, lesson_slug, assignment_slug):
                                                            slug=assignment_slug)})
 
 
-@login_required
 @teacher_required
 def remove_assignment(request, assignment_slug):
     assignment = get_object_or_404(MaestroAssignment, slug=assignment_slug)
@@ -138,7 +137,6 @@ def remove_assignment(request, assignment_slug):
     return redirect("lesson_view", class_slug=lesson.associated_class.slug, lesson_slug=lesson.slug)
 
 
-@login_required
 @admin_required
 def class_edit(request, slug=None):
     if slug:
@@ -165,7 +163,6 @@ def class_edit(request, slug=None):
     return render(request, "pages/create_edit_class.html", {"form": form, "maestro_class": maestro_class})
 
 
-@login_required
 @teacher_required
 def lesson_create_edit(request, class_slug, lesson_slug=None):
     maestro_class = get_object_or_404(MaestroClass, slug=class_slug)
@@ -209,7 +206,6 @@ def lesson_create_edit(request, class_slug, lesson_slug=None):
     })
 
 
-@login_required
 @teacher_required
 def remove_lesson(request, class_slug, lesson_slug):
     lesson = get_object_or_404(MaestroLesson, slug=lesson_slug)
@@ -273,7 +269,6 @@ def notifications(request):
     )
 
 
-@login_required
 @teacher_required
 def enroll_students(request, class_slug):
     maestro_class = get_object_or_404(MaestroClass, slug=class_slug)
@@ -304,7 +299,6 @@ def enroll_students(request, class_slug):
     return render(request, "pages/enroll_students.html", {"form": form, "maestro_class": maestro_class})
 
 
-@login_required
 @teacher_required
 def remove_student(request, class_slug, student_username):
     maestro_class = get_object_or_404(MaestroClass, slug=class_slug)
